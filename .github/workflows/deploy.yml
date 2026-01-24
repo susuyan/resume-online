@@ -40,6 +40,7 @@ jobs:
         run: |
           pandoc resume.md \
             --pdf-engine=xelatex \
+            --include-in-header=style.tex \
             -V mainfont="Noto Sans CJK SC" \
             -V geometry:margin=2cm \
             -V fontsize=11pt \
