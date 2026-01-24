@@ -18,30 +18,39 @@
 \usepackage{setspace}
 \setstretch{1.05}
 
-% ---------- Section Style ----------
+% ---------- Section Style (H2 in Markdown) ----------
 \usepackage{titlesec}
 
+% Disable numbering
+\setcounter{secnumdepth}{0}
+
+% H1 (# Title) - Mapped to \section in article class
 \titleformat{\section}
-  {\color{PrimaryColor}\scshape\large\bfseries}
-  {}
-  {0em}
-  {}
-  [\color{PrimaryColor}\titlerule]
+  {\centering\Huge\bfseries\color{PrimaryColor}} % Format
+  {} % Label
+  {0em} % Sep
+  {} % Before-code
 
-\titlespacing{\section}{0pt}{10pt}{6pt}
+\titlespacing{\section}{0pt}{0pt}{15pt}
 
-% ---------- Name Title ----------
-\newcommand{\resumetitle}[1]{
-  \begin{center}
-    {\Huge\bfseries\color{PrimaryColor} #1}
-  \end{center}
-  \vspace{6pt}
-}
+% H2 (## Section) - Mapped to \subsection in article class
+\titleformat{\subsection}
+  {\color{PrimaryColor}\scshape\large\bfseries} % Format
+  {} % Label
+  {0em} % Sep
+  {} % Before-code
+  [\color{PrimaryColor}\titlerule] % Horizontal rule below
 
-% ---------- Sub Entry ----------
-\newcommand{\resumesubentry}[2]{
-  \textbf{#1} \hfill \textit{#2}\\
-}
+\titlespacing{\subsection}{0pt}{10pt}{6pt}
+
+% H3 (### Subsection) - Mapped to \subsubsection in article class
+\titleformat{\subsubsection}
+  {\color{PrimaryColor}\bfseries} % Format
+  {} % Label
+  {0em} % Sep
+  {} % Before-code
+
+\titlespacing{\subsubsection}{0pt}{6pt}{2pt}
 
 % ---------- Item List ----------
 \usepackage{enumitem}
