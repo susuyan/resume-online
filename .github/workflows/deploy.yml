@@ -31,6 +31,13 @@ jobs:
           pandoc resume.md \
             --pdf-engine=xelatex \
             -V mainfont="Noto Sans CJK SC" \
+            -V geometry:margin=2cm \
+            -V fontsize=11pt \
+            -V linestretch=1.2 \
+            -V papersize=a4 \
+            -V colorlinks=true \
+            -V linkcolor=blue \
+            -V urlcolor=blue \
             -o resume.pdf
 
       # 2️⃣ PDF → HTML（pdf2htmlEX via Docker）
