@@ -28,13 +28,8 @@ pandoc resume_preview.md \
     --pdf-engine=xelatex \
     --include-in-header=style.tex \
     -V mainfont="PingFang SC" \
-    -V geometry:margin=2cm \
     -V fontsize=11pt \
-    -V linestretch=1.2 \
     -V papersize=a4 \
-    -V colorlinks=true \
-    -V linkcolor=blue \
-    -V urlcolor=blue \
     -o resume_preview.pdf
 
 # 清理临时文件

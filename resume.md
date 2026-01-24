@@ -1,8 +1,6 @@
-<div align="center">
-<font size="6" color="#466AA0"><b>余胜民</b></font>
-<br>
-iOS 工程师
-</div>
+\resumetitle{余胜民}
+\vspace{-15pt}
+<div align="center">iOS 工程师</div>
 
 ## 个人信息
 
