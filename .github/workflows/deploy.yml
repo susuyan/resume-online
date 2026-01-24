@@ -26,16 +26,6 @@ jobs:
       - name: Install pandoc
         run: sudo apt-get install -y pandoc texlive-xetex fonts-noto-cjk
 
-      - name: Inject Secrets
-        env:
-          PHONE: ${{ secrets.RESUME_PHONE }}
-          EMAIL: ${{ secrets.RESUME_EMAIL }}
-          WECHAT: ${{ secrets.RESUME_WECHAT }}
-        run: |
-          sed -i "s/{{PHONE}}/$PHONE/g" resume.md
-          sed -i "s/{{EMAIL}}/$EMAIL/g" resume.md
-          sed -i "s/{{WECHAT}}/$WECHAT/g" resume.md
-
       - name: Build PDF
         run: |
           pandoc resume.md \
