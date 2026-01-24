@@ -1,8 +1,10 @@
+# 余胜民（iOS 工程师）
+
 ## 联系方式
 
-- 手机号：17600512027
-- Email： [susuyan@163.com](mailto:susuyan@163.com)
-- 微信： susuyan_dream
+- 手机号：{{PHONE}}
+- Email： {{EMAIL}}
+- 微信： {{WECHAT}}
 
 ## 个人信息
 
