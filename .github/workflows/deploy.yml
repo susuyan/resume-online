@@ -51,6 +51,7 @@ jobs:
           mv index.html site/
           # 将 PDF 也放入 site 目录，方便下载
           mv resume.pdf site/
+          [ -f CNAME ] && mv CNAME site/ || true
           [ -f resume.css ] && mv resume.css site/ || true
           [ -d resume_fonts ] && mv resume_fonts site/ || true
 
