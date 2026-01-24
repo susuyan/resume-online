@@ -38,8 +38,9 @@ jobs:
         run: |
           docker run --rm \
             -v "$PWD":/pdf \
+            -w /pdf \
             pdf2htmlex/pdf2htmlex:0.18.8.rc2-master-20200820-ubuntu-20.04-x86_64 \
-            pdf2htmlEX resume.pdf
+            --zoom 1.3 resume.pdf
 
           mv resume.html index.html
 
