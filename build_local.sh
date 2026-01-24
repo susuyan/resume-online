@@ -13,6 +13,26 @@ if ! command -v xelatex &> /dev/null; then
     exit 1
 fi
 
+# 检查必要的 LaTeX 包
+required_packages=("titlesec" "xcolor" "enumitem" "geometry" "setspace" "hyperref")
+missing_packages=()
+
+for pkg in "${required_packages[@]}"; do
+    if ! kpsewhich "$pkg.sty" &> /dev/null; then
+        missing_packages+=("$pkg")
+    fi
+done
+
+if [ ${#missing_packages[@]} -gt 0 ]; then
+    echo "❌ 错误: 缺少 LaTeX 包: ${missing_packages[*]}"
+    echo "请运行以下命令进行安装 (需要管理员权限):"
+    echo ""
+    echo "    sudo tlmgr update --self"
+    echo "    sudo tlmgr install ${missing_packages[*]}"
+    echo ""
+    exit 1
+fi
+
 echo "🚀 开始构建本地简历预览..."
 
 # 创建临时副本进行变量替换
