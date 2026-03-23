@@ -12,14 +12,16 @@
 
 ## 技术能力
 
-**移动端：** Swift / Objective-C / Flutter / RxSwift / SwiftUI / UIKit
-**前端：** TypeScript / React / Vue / Tailwind CSS
-**后端：** Node.js / Python / RESTful API / GraphQL / gRPC
-**数据：** PostgreSQL / MySQL / Redis / MongoDB / Elasticsearch
-**基础设施：** Docker / Kubernetes / AWS / 阿里云 / Nginx / Linux
-**工程化：** CI/CD / DevOps / GitHub Actions / Fastlane / 自动化测试
-**AI/自动化：** LLM集成 / 智能体构建 / 工作流自动化 / RAG
-**VR/Unity：** Unity 3D / C# / PICO VR SDK / 空间计算 / 数据采集
+| 领域 | 技术栈 |
+|------|--------|
+| **移动端** | Swift / Objective-C / Flutter / RxSwift / SwiftUI / UIKit |
+| **前端** | TypeScript / React / Vue / Tailwind CSS |
+| **后端** | Node.js / Python / RESTful API / GraphQL / gRPC |
+| **数据** | PostgreSQL / MySQL / Redis / MongoDB / Elasticsearch |
+| **基础设施** | Docker / Kubernetes / AWS / 阿里云 / Nginx / Linux |
+| **工程化** | CI/CD / DevOps / GitHub Actions / Fastlane / 自动化测试 |
+| **AI/自动化** | LLM集成 / 智能体构建 / 工作流自动化 / RAG |
+| **VR/Unity** | Unity 3D / C# / PICO VR SDK / 空间计算 / 数据采集 |
 
 ---
 
