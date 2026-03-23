@@ -22,12 +22,9 @@
 \usepackage{titlesec}
 \setcounter{secnumdepth}{0}
 
-% H1: 姓名
-\titleformat{\section}
-  {\centering\Huge\bfseries\color{PrimaryColor}}
-  {}
-  {0em}
-  {}
+% H1: 姓名（使用 center 环境确保居中）
+\usepackage{sectsty}
+\sectionfont{\centering\Huge\bfseries\color{PrimaryColor}}
 
 \titlespacing{\section}{0pt}{0pt}{10pt}
 
@@ -39,7 +36,7 @@
   {}
   [\titlerule]
 
-\titlespacing{\subsection}{0pt}{10pt}{5pt}
+\titlespacing{\subsection}{0pt}{12pt}{6pt}
 
 % H3: 子标题
 \titleformat{\subsubsection}
@@ -53,8 +50,9 @@
 \usepackage{enumitem}
 \setlist[itemize]{
   leftmargin=1.5em,
-  itemsep=2pt,
-  topsep=2pt
+  itemsep=3pt,
+  topsep=4pt,
+  parsep=0pt
 }
 
 \usepackage[hidelinks]{hyperref}
