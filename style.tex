@@ -1,120 +1,119 @@
 % =========================
-% Resume Style - One Page Professional
+% Resume Style - Billryan Inspired
 % =========================
 
 \usepackage{xcolor}
-% 排版优化 - 更好的字符间距和换行
 \usepackage{microtype}
-% 专业配色方案
-\definecolor{PrimaryColor}{HTML}{1A365D}
-\definecolor{SecondaryColor}{HTML}{2C5282}
-\definecolor{AccentColor}{HTML}{C05621}
-\definecolor{TextColor}{HTML}{2D3748}
-\definecolor{LightGray}{HTML}{718096}
-\definecolor{BorderColor}{HTML}{E2E8F0}
 
-% 紧凑边距 - 为单页优化
+% 专业配色方案
+\definecolor{PrimaryColor}{HTML}{2C3E50}
+\definecolor{AccentColor}{HTML}{3498DB}
+\definecolor{TextColor}{HTML}{333333}
+\definecolor{LightGray}{HTML}{7F8C8D}
+\definecolor{LineColor}{HTML}{BDC3C7}
+
+% 页面边距 - 紧凑单页
 \usepackage[
-  top=0.5cm,
-  bottom=0.5cm,
-  left=0.6cm,
-  right=0.6cm
+  a4paper,
+  left=0.75in,
+  right=0.75in,
+  top=0.6in,
+  bottom=0.5in,
+  nohead
 ]{geometry}
 
-% 行高 - 紧凑但可读
+% 行高
 \usepackage{setspace}
-\setstretch{1.0}
+\setstretch{1.05}
 
 \usepackage{titlesec}
+\usepackage{enumitem}
 \setcounter{secnumdepth}{0}
 
 % =========================
-% 头部样式 - 姓名和职位
+% 章节标题样式 - 小大写+横线
 % =========================
-\usepackage{sectsty}
-\sectionfont{\centering\LARGE\bfseries\color{PrimaryColor}}
+\titleformat{\section}
+  {\Large\scshape\raggedright\color{PrimaryColor}}
+  {}
+  {0em}
+  {}
+  [\vspace{-0.5em}\textcolor{LineColor}{\rule{\linewidth}{0.5pt}}]
 
-\titlespacing{\section}{0pt}{0pt}{4pt}
+\titlespacing*{\section}{0pt}{1.2em}{0.8em}
 
 % =========================
-% 章节标题样式
+% 子章节（公司/项目）样式
 % =========================
 \titleformat{\subsection}
-  {\normalsize\bfseries\color{PrimaryColor}\uppercase}
+  {\large\bfseries\color{PrimaryColor}}
   {}
   {0em}
   {}
-  [\vspace{-4pt}\textcolor{AccentColor}{\rule{\linewidth}{1pt}}]
 
-\titlespacing{\subsection}{0pt}{6pt}{4pt}
+\titlespacing*{\subsection}{0pt}{0.8em}{0.3em}
 
 % =========================
-% 公司/职位标题
+% 小标题（职位/日期）样式
 % =========================
 \titleformat{\subsubsection}
-  {\small\bfseries\color{SecondaryColor}}
+  {\normalsize\color{TextColor}}
   {}
   {0em}
   {}
 
-\titlespacing{\subsubsection}{0pt}{3pt}{0pt}
+\titlespacing*{\subsubsection}{0pt}{0.3em}{0.2em}
 
 % =========================
 % 列表样式 - 超紧凑
 % =========================
-\usepackage{enumitem}
 \setlist[itemize]{
+  noitemsep,
+  topsep=0.2em,
   leftmargin=1.2em,
-  itemsep=0pt,
-  topsep=2pt,
-  parsep=0pt,
-  labelsep=0.3em,
+  labelsep=0.5em,
   label={\textcolor{AccentColor}{\textbullet}}
 }
-
-% 嵌套列表
-\setlist[itemize,2]{
-  leftmargin=1em,
-  itemsep=0pt,
-  topsep=1pt,
-  parsep=0pt,
-  label={\textcolor{AccentColor}{\scriptsize$\circ$}}
-}
-
-% =========================
-% 双栏布局支持
-% =========================
-\usepackage{multicol}
-\setlength{\columnsep}{0.8em}
 
 % =========================
 % 超链接
 % =========================
 \usepackage[hidelinks]{hyperref}
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{0pt}
+\urlstyle{tt}
 
 % =========================
-% 排版优化 - 中文换行
+% 排版优化
 % =========================
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
 \sloppy
 \tolerance=3000
 \emergencystretch=3em
 \hbadness=10000
-\hyphenpenalty=10000
-\exhyphenpenalty=10000
 
 % =========================
-% 自定义命令 - 技能标签
+% 自定义命令
 % =========================
-\newcommand{\skillitem}[1]{%
-  \textcolor{TextColor}{#1}%
+
+% 姓名居中
+\newcommand{\centeredname}[1]{%
+  \begin{center}
+    {\Huge\scshape\color{PrimaryColor}#1}
+  \end{center}
+  \vspace{0.5em}
 }
 
-% 公司职位行格式
-\newcommand{\jobline}[3]{%
-  {\small\bfseries\color{SecondaryColor}#1} \hfill {\footnotesize\color{LightGray}#2}\\[-2pt]
-  {\footnotesize\color{TextColor}#3}%
+% 联系信息居中
+\newcommand{\contactinfo}[1]{%
+  \begin{center}
+    {\normalsize\color{LightGray}#1}
+  \end{center}
+  \vspace{0.8em}
+}
+
+% 日期行（左标题，右日期）
+\newcommand{\datedline}[2]{%
+  \noindent\textbf{#1} \hfill \textcolor{LightGray}{#2}\\
 }
 
 % =========================
