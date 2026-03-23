@@ -2,13 +2,13 @@
 % Professional Resume Template
 % =========================
 
-% 页面设置
+% 页面设置 - 紧凑布局
 \usepackage[
   a4paper,
-  top=1cm,
-  bottom=1cm,
-  left=1.2cm,
-  right=1.2cm
+  top=0.8in,
+  bottom=0.8in,
+  left=0.8in,
+  right=0.8in
 ]{geometry}
 
 % 基础包
@@ -16,17 +16,18 @@
 \usepackage{enumitem}
 \usepackage{titlesec}
 \usepackage{hyperref}
-\usepackage{fontawesome5}
 \usepackage{tabularx}
 \usepackage{array}
+\usepackage{multicol}
+\usepackage{fontawesome5}
 
-% 颜色定义
+% 颜色定义 - 专业配色
 \definecolor{primary}{HTML}{2C3E50}
 \definecolor{secondary}{HTML}{34495E}
-\definecolor{accent}{HTML}{3498DB}
-\definecolor{text}{HTML}{2C3E50}
-\definecolor{lightgray}{HTML}{95A5A6}
-\definecolor{headerblue}{HTML}{1E3A5F}
+\definecolor{accent}{HTML}{2980B9}
+\definecolor{text}{HTML}{333333}
+\definecolor{lightgray}{HTML}{7F8C8D}
+\definecolor{divider}{HTML}{BDC3C7}
 
 % 字体设置
 \usepackage{fontspec}
@@ -35,41 +36,6 @@
 
 % 取消章节编号
 \setcounter{secnumdepth}{0}
-
-% 标题样式
-\titleformat{\section}
-  {\Large\bfseries\color{headerblue}}
-  {}
-  {0em}
-  {}
-  [\vspace{-0.5em}\textcolor{accent}{\rule{\linewidth}{1.5pt}}]
-
-\titlespacing*{\section}{0pt}{12pt}{8pt}
-
-\titleformat{\subsection}
-  {\large\bfseries\color{primary}}
-  {}
-  {0em}
-  {}
-
-\titlespacing*{\subsection}{0pt}{10pt}{4pt}
-
-\titleformat{\subsubsection}
-  {\normalsize\bfseries\color{secondary}}
-  {}
-  {0em}
-  {}
-
-\titlespacing*{\subsubsection}{0pt}{6pt}{2pt}
-
-% 列表样式
-\setlist[itemize]{
-  leftmargin=1.2em,
-  itemsep=2pt,
-  topsep=4pt,
-  parsep=0pt,
-  label={\textcolor{accent}{\textbullet}}
-}
 
 % 段落设置
 \setlength{\parindent}{0pt}
@@ -82,23 +48,69 @@
   urlcolor=accent
 }
 
+% ===== 标题样式 =====
+
+% 姓名 - 居中大号
+\titleformat{\section}
+  {\centering\Huge\bfseries\color{primary}}
+  {}
+  {0em}
+  {}
+
+\titlespacing*{\section}{0pt}{0pt}{8pt}
+
+% 章节标题 - 带分隔线
+\titleformat{\subsection}
+  {\Large\bfseries\color{primary}}
+  {}
+  {0em}
+  {}
+  [\vspace{2pt}{\color{divider}\rule{\linewidth}{0.5pt}}]
+
+\titlespacing*{\subsection}{0pt}{12pt}{6pt}
+
+% 公司/项目名称
+\titleformat{\subsubsection}
+  {\large\bfseries\color{secondary}}
+  {}
+  {0em}
+  {}
+
+\titlespacing*{\subsubsection}{0pt}{8pt}{2pt}
+
+% 列表样式 - 紧凑
+\setlist[itemize]{
+  leftmargin=1.2em,
+  itemsep=1pt,
+  topsep=3pt,
+  parsep=0pt,
+  label={\textcolor{accent}{\textbullet}}
+}
+
 % 防止溢出
 \sloppy
 \tolerance=1000
 \emergencystretch=3em
 
-% 自定义命令
-\newcommand{\resumeheader}[4]{%
+% ===== 自定义命令 =====
+
+% 联系方式行
+\newcommand{\contactline}[1]{%
   \begin{center}
-    {\Huge\bfseries\color{headerblue} #1}\\[6pt]
-    {\large\color{secondary} #2}\\[4pt]
-    {\color{lightgray} #3}
+    {\color{lightgray} #1}
   \end{center}
-  \vspace{8pt}
+  \vspace{4pt}
 }
 
-\newcommand{\jobtitle}[3]{%
-  \textbf{\color{primary}#1} \hfill {\color{lightgray}#2}\\
+% 职位标题：公司 | 职位 | 时间
+\newcommand{\jobentry}[3]{%
+  \textbf{\color{primary}#1} \hfill {\color{lightgray}#2}\\[-2pt]
   {\color{secondary}#3}
   \vspace{2pt}
+}
+
+% 技能行
+\newcommand{\skillline}[2]{%
+  \textbf{\color{secondary}#1:} {\color{text}#2}
+  \vspace{1pt}
 }
