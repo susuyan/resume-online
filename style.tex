@@ -9,7 +9,7 @@
 \hypersetup{hidelinks}
 \usepackage{url}
 \urlstyle{tt}
-\usepackage{fontawesome}       % FontAwesome 图标
+% \usepackage{fontawesome}    % FontAwesome 图标 - GitHub Actions 环境未安装
 \usepackage{xcolor}
 
 % 页面布局 (resume.cls 第33-40行)
@@ -94,18 +94,18 @@
   \vspace{0.85ex}%
 }
 
-% 联系方式图标命令
-\newcommand{\email}[1]{\faEnvelope\ \href{mailto:#1}{#1}}
-\newcommand{\phone}[1]{\faPhone\ {#1}}
-\newcommand{\linkedin}[2][]{\faLinkedin\
+% 联系方式图标命令 (简化版，不使用 FontAwesome)
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\newcommand{\phone}[1]{#1}
+\newcommand{\linkedin}[2][]{%
   \ifthenelse{\isempty{#1}}%
     {\href{#2}{#2}}
     {\href{#2}{#1}}}
-\newcommand{\github}[2][]{\faGithub\
+\newcommand{\github}[2][]{%
   \ifthenelse{\isempty{#1}}%
     {\href{#2}{#2}}
     {\href{#2}{#1}}}
-\newcommand{\homepage}[2][]{\faLink\
+\newcommand{\homepage}[2][]{%
   \ifthenelse{\isempty{#1}}%
     {\href{#2}{#2}}
     {\href{#2}{#1}}}
