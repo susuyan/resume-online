@@ -1,5 +1,5 @@
 % =========================
-% Resume Style v2 - Modern Professional
+% Resume Style v3 - Refined Professional
 % =========================
 
 \usepackage{xcolor}
@@ -13,14 +13,14 @@
 \definecolor{BorderColor}{HTML}{E2E8F0}
 
 \usepackage[
-  top=0.7cm,
-  bottom=0.7cm,
-  left=1.0cm,
-  right=1.0cm
+  top=0.65cm,
+  bottom=0.65cm,
+  left=0.9cm,
+  right=0.9cm
 ]{geometry}
 
 \usepackage{setspace}
-\setstretch{1.12}
+\setstretch{1.1}
 
 \usepackage{titlesec}
 \setcounter{secnumdepth}{0}
@@ -29,7 +29,7 @@
 \usepackage{sectsty}
 \sectionfont{\centering\Huge\bfseries\color{PrimaryColor}}
 
-\titlespacing{\section}{0pt}{0pt}{8pt}
+\titlespacing{\section}{0pt}{0pt}{6pt}
 
 % H2: 章节标题 - 左侧色块+文字设计
 \titleformat{\subsection}
@@ -37,25 +37,34 @@
   {}
   {0em}
   {}
-  [\vspace{-4pt}\textcolor{AccentColor}{\rule{\linewidth}{1.5pt}}]
+  [\vspace{-2pt}\textcolor{AccentColor}{\rule{0.6\linewidth}{1.2pt}}]
 
-\titlespacing{\subsection}{0pt}{14pt}{8pt}
+\titlespacing{\subsection}{0pt}{12pt}{6pt}
 
 % H3: 子标题 - 公司/职位名
 \titleformat{\subsubsection}
-  {\large\bfseries\color{SecondaryColor}}
+  {\normalsize\bfseries\color{SecondaryColor}}
   {}
   {0em}
   {}
 
-\titlespacing{\subsubsection}{0pt}{6pt}{3pt}
+\titlespacing{\subsubsection}{0pt}{5pt}{2pt}
 
 % 项目符号列表 - 使用实心圆点
 \usepackage{enumitem}
 \setlist[itemize]{
-  leftmargin=1.4em,
-  itemsep=2pt,
-  topsep=4pt,
+  leftmargin=1.3em,
+  itemsep=1pt,
+  topsep=3pt,
+  parsep=0pt,
+  label={\textcolor{AccentColor}{\textbullet}}
+}
+
+% 嵌套列表也使用橙色圆点
+\setlist[itemize,2]{
+  leftmargin=1.2em,
+  itemsep=1pt,
+  topsep=2pt,
   parsep=0pt,
   label={\textcolor{AccentColor}{\textbullet}}
 }
@@ -71,7 +80,7 @@
 \exhyphenpenalty=10000
 
 % 段落间距微调
-\setlength{\parskip}{3pt}
+\setlength{\parskip}{2pt}
 
 % 引入tikz用于绘制装饰元素
 \usepackage{tikz}
