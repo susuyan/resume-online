@@ -13,10 +13,10 @@
 \definecolor{BorderColor}{HTML}{E2E8F0}
 
 \usepackage[
-  top=0.65cm,
-  bottom=0.65cm,
-  left=0.9cm,
-  right=0.9cm
+  top=0.7cm,
+  bottom=0.7cm,
+  left=1.0cm,
+  right=1.0cm
 ]{geometry}
 
 \usepackage{setspace}
@@ -72,12 +72,13 @@
 \usepackage[hidelinks]{hyperref}
 \setlength{\parindent}{0pt}
 
-% 防止文字溢出
+% 防止文字溢出 - 增加宽容度避免截断
 \sloppy
-\tolerance=1000
-\emergencystretch=3em
+\tolerance=2000
+\emergencystretch=4em
 \hyphenpenalty=10000
 \exhyphenpenalty=10000
+\hbadness=10000
 
 % 段落间距微调
 \setlength{\parskip}{2pt}
