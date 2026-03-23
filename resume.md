@@ -1,8 +1,3 @@
----
-geometry: margin=1.2cm
-fontsize: 10pt
----
-
 # 余胜民
 
 **全栈软件服务交付工程师**
