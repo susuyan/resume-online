@@ -1,123 +1,122 @@
 % =========================
-% Resume Style - Billryan Inspired
+% Resume Style - Billryan Template Extraction
 % =========================
 
+% 基础宏包 (来自 resume.cls)
+\usepackage{xltxtra}           % XeLaTeX 增强，包含 fontspec
+\usepackage{xifthen}           % 条件判断
+\usepackage{hyperref}          % 超链接
+\hypersetup{hidelinks}
+\usepackage{url}
+\urlstyle{tt}
+\usepackage{fontawesome}       % FontAwesome 图标
 \usepackage{xcolor}
-\usepackage{microtype}
 
-% 专业配色方案
-\definecolor{PrimaryColor}{HTML}{2C3E50}
-\definecolor{AccentColor}{HTML}{3498DB}
-\definecolor{TextColor}{HTML}{333333}
-\definecolor{LightGray}{HTML}{7F8C8D}
-\definecolor{LineColor}{HTML}{BDC3C7}
-
-% 页面边距 - 紧凑单页
+% 页面布局 (resume.cls 第33-40行)
 \usepackage[
   a4paper,
-  left=0.75in,
-  right=0.75in,
-  top=0.6in,
-  bottom=0.5in,
+  left=0.8in,
+  right=0.8in,
+  top=0.70in,
+  bottom=0.55in,
   nohead
 ]{geometry}
 
-% 行高
-\usepackage{setspace}
-\setstretch{1.05}
+% 禁用全局缩进 (resume.cls 第6行)
+\setlength{\parindent}{0pt}
 
+% 标题和列表设置
 \usepackage{titlesec}
 \usepackage{enumitem}
-\setcounter{secnumdepth}{0}
+\usepackage[super]{nth}
+
+% 列表样式 (resume.cls 第44-47行)
+\setlist{noitemsep}           % 移除列表项间距
+\setlist[itemize]{topsep=0.25em, leftmargin=1.5pc}
+\setlist[enumerate]{topsep=0.25em, leftmargin=1.5pc}
 
 % =========================
-% 章节标题样式 - 小大写+横线
+% 章节标题样式 (resume.cls 第50-62行)
 % =========================
 \titleformat{\section}
-  {\Large\scshape\raggedright\color{PrimaryColor}}
+  {\Large\scshape\raggedright}  % 小大写，左对齐
+  {}{0em}
   {}
-  {0em}
-  {}
-  [\vspace{-0.5em}\textcolor{LineColor}{\rule{\linewidth}{0.5pt}}]
+  [\titlerule]                   % 标题后横线
+\titlespacing*{\section}{0cm}{*1.8}{*1.8}
 
-\titlespacing*{\section}{0pt}{1.2em}{0.8em}
-
-% =========================
-% 子章节（公司/项目）样式
-% =========================
 \titleformat{\subsection}
-  {\large\bfseries\color{PrimaryColor}}
+  {\large\raggedright}
+  {}{0em}
   {}
-  {0em}
-  {}
+\titlespacing*{\subsection}{0cm}{*1.8}{*0.6}
 
-\titlespacing*{\subsection}{0pt}{0.8em}{0.3em}
-
-% =========================
-% 小标题（职位/日期）样式
-% =========================
 \titleformat{\subsubsection}
-  {\normalsize\color{TextColor}}
+  {\normalsize\raggedright}
+  {}{0em}
   {}
-  {0em}
-  {}
-
-\titlespacing*{\subsubsection}{0pt}{0.3em}{0.2em}
+\titlespacing*{\subsubsection}{0cm}{*0.6}{*0.3}
 
 % =========================
-% 列表样式 - 超紧凑
+% Billryan 自定义命令 (resume.cls 第64-122行)
 % =========================
-\setlist[itemize]{
-  noitemsep,
-  topsep=0.2em,
-  leftmargin=1.2em,
-  labelsep=0.5em,
-  label={\textcolor{AccentColor}{\textbullet}}
+
+% 日期章节 (左标题，右日期)
+\newcommand{\datedsection}[2]{%
+  \section[#1]{#1 \hfill #2}%
 }
 
-% =========================
-% 超链接
-% =========================
-\usepackage[hidelinks]{hyperref}
-\urlstyle{tt}
+% 日期子章节 (公司/学校 + 日期)
+\newcommand{\datedsubsection}[2]{%
+  \subsection[#1]{#1 \hfill #2}%
+}
+
+% 日期行 (单行，两端对齐)
+\newcommand{\datedline}[2]{%
+  {\par #1 \hfill #2 \par}%
+}
+
+% 姓名居中，小大写
+\newcommand{\name}[1]{%
+  \centerline{\Huge\scshape{#1}}%
+  \vspace{1.25ex}%
+}
+
+% 联系信息居中
+\newcommand{\basicInfo}[1]{%
+  \centerline{\sffamily\large{#1}}%
+  \vspace{1.5ex}%
+}
+
+% 职位/角色说明
+\newcommand{\role}[2]{%
+  {\par \textit{#1} ~ #2 \par}%
+  \vspace{0.85ex}%
+}
+
+% 联系方式图标命令
+\newcommand{\email}[1]{\faEnvelope\ \href{mailto:#1}{#1}}
+\newcommand{\phone}[1]{\faPhone\ {#1}}
+\newcommand{\linkedin}[2][]{\faLinkedin\
+  \ifthenelse{\isempty{#1}}%
+    {\href{#2}{#2}}
+    {\href{#2}{#1}}}
+\newcommand{\github}[2][]{\faGithub\
+  \ifthenelse{\isempty{#1}}%
+    {\href{#2}{#2}}
+    {\href{#2}{#1}}}
+\newcommand{\homepage}[2][]{\faLink\
+  \ifthenelse{\isempty{#1}}%
+    {\href{#2}{#2}}
+    {\href{#2}{#1}}}
 
 % =========================
-% 排版优化
+% 中文换行优化
 % =========================
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{0pt}
+\usepackage{microtype}
 \sloppy
 \tolerance=3000
 \emergencystretch=3em
 \hbadness=10000
-
-% =========================
-% 自定义命令
-% =========================
-
-% 姓名居中
-\newcommand{\centeredname}[1]{%
-  \begin{center}
-    {\Huge\scshape\color{PrimaryColor}#1}
-  \end{center}
-  \vspace{0.5em}
-}
-
-% 联系信息居中
-\newcommand{\contactinfo}[1]{%
-  \begin{center}
-    {\normalsize\color{LightGray}#1}
-  \end{center}
-  \vspace{0.8em}
-}
-
-% 日期行（左标题，右日期）
-\newcommand{\datedline}[2]{%
-  \noindent\textbf{#1} \hfill \textcolor{LightGray}{#2}\\
-}
-
-% =========================
-% 表格工具
-% =========================
-\usepackage{array}
-\usepackage{tabularx}
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
