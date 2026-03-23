@@ -74,10 +74,20 @@
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.2}
 
-% 字体
+% 字体 - 使用系统自带中文字体
 \usepackage{fontspec}
-\setmainfont{Noto Sans CJK SC}
-\setsansfont{Noto Sans CJK SC}
+\setmainfont{Noto Sans CJK SC}[
+  BoldFont=Noto Sans CJK SC Bold,
+  UprightFont=Noto Sans CJK SC Regular
+]
+\setsansfont{Noto Sans CJK SC}[
+  BoldFont=Noto Sans CJK SC Bold,
+  UprightFont=Noto Sans CJK SC Regular
+]
+
+% 确保中文字体正确显示
+\usepackage{xeCJK}
+\xeCJKsetup{xeCJKactive=false}
 
 % 页脚
 \usepackage{fancyhdr}

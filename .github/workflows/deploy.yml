@@ -84,8 +84,14 @@ jobs:
             -v "$PWD":/pdf \
             -w /pdf \
             pdf2htmlex/pdf2htmlex:0.18.8.rc2-master-20200820-ubuntu-20.04-x86_64 \
-            --zoom 1.3 \
+            --zoom 1.5 \
+            --font-format woff2 \
+            --embed-css 1 \
+            --embed-font 1 \
+            --embed-image 1 \
             --process-outline 0 \
+            --printing 0 \
+            --fallback 1 \
             resume.pdf
 
           # 保存镜像到缓存
