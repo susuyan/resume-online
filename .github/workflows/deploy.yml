@@ -46,6 +46,7 @@ jobs:
             --zoom 1.5 \
             --process-outline 0 \
             --embed-base-font 1 \
+            --font-subsetting 0 \
             resume.pdf
 
           mv resume.html index.html
