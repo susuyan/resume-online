@@ -1,5 +1,5 @@
 % =========================
-% Resume Style v4 - Chinese Optimized
+% Resume Style v5 - Balanced Professional
 % =========================
 
 \usepackage{xcolor}
@@ -72,19 +72,16 @@
 \usepackage[hidelinks]{hyperref}
 \setlength{\parindent}{0pt}
 
-% 中文断行优化 - 使用 xeCJK 设置
-\usepackage{xeCJK}
-\xeCJKsetup{
-  CJKecglue={\hskip 0.15em plus 0.05em minus 0.05em},
-  xCJKecglue=\hskip 0.15em plus 0.05em minus 0.05em
-}
-
-% 防止文字溢出 - 平衡设置
+% 排版优化 - 平衡设置
 \sloppy
-\tolerance=500
-\emergencystretch=2em
+\tolerance=800
+\emergencystretch=2.5em
 \hyphenpenalty=10000
 \exhyphenpenalty=10000
+\hbadness=10000
+
+% 使用 microtype 优化排版
+\usepackage{microtype}
 
 % 段落间距微调
 \setlength{\parskip}{2pt}
