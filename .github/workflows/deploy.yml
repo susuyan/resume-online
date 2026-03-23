@@ -2,7 +2,7 @@ name: Build & Deploy Resume
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
@@ -22,10 +22,37 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 1️⃣ Markdown → PDF
-      - name: Install pandoc
-        run: sudo apt-get install -y pandoc texlive-xetex fonts-noto-cjk
+      # 1️⃣ 缓存 apt 依赖
+      - name: Cache apt packages
+        uses: actions/cache@v4
+        id: apt-cache
+        with:
+          path: |
+            /var/cache/apt/archives
+            /var/lib/apt/lists
+          key: ${{ runner.os }}-apt-pandoc-texlive-${{ hashFiles('.github/workflows/deploy.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-apt-pandoc-texlive-
 
+      # 2️⃣ 安装依赖（带缓存）
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc texlive-xetex fonts-noto-cjk
+
+      # 3️⃣ 缓存 TexLive 字体和包
+      - name: Cache TexLive
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.texlive
+            /usr/share/texlive
+            /usr/share/texmf
+          key: ${{ runner.os }}-texlive-${{ hashFiles('style.tex') }}
+          restore-keys: |
+            ${{ runner.os }}-texlive-
+
+      # 4️⃣ Markdown → PDF（带缓存检查）
       - name: Build PDF
         run: |
           pandoc resume.md \
@@ -36,9 +63,23 @@ jobs:
             -V papersize=a4 \
             -o resume.pdf
 
-      # 2️⃣ PDF → HTML（pdf2htmlEX via Docker）
+      # 5️⃣ 缓存 Docker 镜像
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-docker-pdf2htmlex
+          restore-keys: |
+            ${{ runner.os }}-docker-
+
+      # 6️⃣ PDF → HTML（使用本地缓存镜像）
       - name: Convert PDF to HTML
         run: |
+          # 尝试加载缓存的镜像
+          if [ -f /tmp/.buildx-cache/pdf2htmlex.tar ]; then
+            docker load -i /tmp/.buildx-cache/pdf2htmlex.tar || true
+          fi
+
           docker run --rm \
             -v "$PWD":/pdf \
             -w /pdf \
@@ -47,20 +88,23 @@ jobs:
             --process-outline 0 \
             resume.pdf
 
+          # 保存镜像到缓存
+          mkdir -p /tmp/.buildx-cache
+          docker save pdf2htmlex/pdf2htmlex:0.18.8.rc2-master-20200820-ubuntu-20.04-x86_64 -o /tmp/.buildx-cache/pdf2htmlex.tar || true
+
           mv resume.html index.html
 
-      # 3️⃣ 准备 Pages 产物
+      # 7️⃣ 准备 Pages 产物
       - name: Prepare site
         run: |
           mkdir site
           mv index.html site/
-          # 将 PDF 也放入 site 目录，方便下载
           mv resume.pdf site/
           [ -f CNAME ] && mv CNAME site/ || true
           [ -f resume.css ] && mv resume.css site/ || true
           [ -d resume_fonts ] && mv resume_fonts site/ || true
 
-      # 4️⃣ 上传到 GitHub Pages
+      # 8️⃣ 上传到 GitHub Pages
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
