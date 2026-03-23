@@ -32,7 +32,7 @@ jobs:
             --pdf-engine=xelatex \
             --include-in-header=style.tex \
             -V mainfont="Noto Sans CJK SC" \
-            -V fontsize=10.5pt \
+            -V fontsize=10pt \
             -V papersize=a4 \
             -o resume.pdf
 
