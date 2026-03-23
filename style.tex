@@ -1,116 +1,66 @@
 % =========================
-% Professional Resume Template
+% Resume Style for pdf2htmlEX
 % =========================
 
-% 页面设置 - 紧凑布局
+\usepackage{xcolor}
+\definecolor{PrimaryColor}{HTML}{2C3E50}
+\definecolor{SecondaryColor}{HTML}{34495E}
+\definecolor{AccentColor}{HTML}{3498DB}
+\definecolor{TextColor}{HTML}{333333}
+\definecolor{LightGray}{HTML}{7F8C8D}
+
 \usepackage[
-  a4paper,
-  top=0.8in,
-  bottom=0.8in,
-  left=0.8in,
-  right=0.8in
+  top=1.2cm,
+  bottom=1.2cm,
+  left=1.5cm,
+  right=1.5cm
 ]{geometry}
 
-% 基础包
-\usepackage{xcolor}
-\usepackage{enumitem}
+\usepackage{setspace}
+\setstretch{1.15}
+
 \usepackage{titlesec}
-\usepackage{hyperref}
-\usepackage{tabularx}
-\usepackage{array}
-\usepackage{multicol}
-% \usepackage{fontawesome5}  % 暂不启用，需要额外安装
-
-% 颜色定义 - 专业配色
-\definecolor{primary}{HTML}{2C3E50}
-\definecolor{secondary}{HTML}{34495E}
-\definecolor{accent}{HTML}{2980B9}
-\definecolor{text}{HTML}{333333}
-\definecolor{lightgray}{HTML}{7F8C8D}
-\definecolor{divider}{HTML}{BDC3C7}
-
-% 字体设置
-\usepackage{fontspec}
-\setmainfont{Noto Sans CJK SC}
-\setsansfont{Noto Sans CJK SC}
-
-% 取消章节编号
 \setcounter{secnumdepth}{0}
 
-% 段落设置
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{0pt}
-
-% 超链接
-\hypersetup{
-  colorlinks=true,
-  linkcolor=accent,
-  urlcolor=accent
-}
-
-% ===== 标题样式 =====
-
-% 姓名 - 居中大号
+% H1: 姓名
 \titleformat{\section}
-  {\centering\Huge\bfseries\color{primary}}
+  {\centering\Huge\bfseries\color{PrimaryColor}}
   {}
   {0em}
   {}
 
-\titlespacing*{\section}{0pt}{0pt}{8pt}
+\titlespacing{\section}{0pt}{0pt}{10pt}
 
-% 章节标题 - 带分隔线
+% H2: 章节标题 (下划线)
 \titleformat{\subsection}
-  {\Large\bfseries\color{primary}}
+  {\Large\bfseries\color{PrimaryColor}}
   {}
   {0em}
   {}
-  [\vspace{2pt}{\color{divider}\rule{\linewidth}{0.5pt}}]
+  [\titlerule]
 
-\titlespacing*{\subsection}{0pt}{12pt}{6pt}
+\titlespacing{\subsection}{0pt}{10pt}{5pt}
 
-% 公司/项目名称
+% H3: 子标题
 \titleformat{\subsubsection}
-  {\large\bfseries\color{secondary}}
+  {\large\bfseries\color{SecondaryColor}}
   {}
   {0em}
   {}
 
-\titlespacing*{\subsubsection}{0pt}{8pt}{2pt}
+\titlespacing{\subsubsection}{0pt}{5pt}{2pt}
 
-% 列表样式 - 紧凑
+\usepackage{enumitem}
 \setlist[itemize]{
-  leftmargin=1.2em,
-  itemsep=1pt,
-  topsep=3pt,
-  parsep=0pt,
-  label={\textcolor{accent}{\textbullet}}
+  leftmargin=1.5em,
+  itemsep=2pt,
+  topsep=2pt
 }
 
-% 防止溢出
+\usepackage[hidelinks]{hyperref}
+\setlength{\parindent}{0pt}
+
+% 防止文字溢出
 \sloppy
 \tolerance=1000
 \emergencystretch=3em
-
-% ===== 自定义命令 =====
-
-% 联系方式行
-\newcommand{\contactline}[1]{%
-  \begin{center}
-    {\color{lightgray} #1}
-  \end{center}
-  \vspace{4pt}
-}
-
-% 职位标题：公司 | 职位 | 时间
-\newcommand{\jobentry}[3]{%
-  \textbf{\color{primary}#1} \hfill {\color{lightgray}#2}\\[-2pt]
-  {\color{secondary}#3}
-  \vspace{2pt}
-}
-
-% 技能行
-\newcommand{\skillline}[2]{%
-  \textbf{\color{secondary}#1:} {\color{text}#2}
-  \vspace{1pt}
-}
