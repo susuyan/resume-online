@@ -1,101 +1,87 @@
 % =========================
-% Resume Style Definition
+% Resume Style Definition - Professional CV Style
 % =========================
 
 \usepackage{xcolor}
-\definecolor{PrimaryColor}{HTML}{2C3E50}
-\definecolor{SecondaryColor}{HTML}{34495E}
-\definecolor{AccentColor}{HTML}{3498DB}
-\definecolor{TextColor}{HTML}{333333}
-\definecolor{LightGray}{HTML}{95A5A6}
+\definecolor{PrimaryColor}{HTML}{1a1a1a}
+\definecolor{SecondaryColor}{HTML}{4a4a4a}
+\definecolor{AccentColor}{HTML}{2c5282}
+\definecolor{LightGray}{HTML}{718096}
+\definecolor{BorderColor}{HTML}{e2e8f0}
 
 \usepackage[
-  top=1.2cm,
-  bottom=1.2cm,
-  left=1.8cm,
-  right=1.8cm
+  a4paper,
+  top=1.5cm,
+  bottom=1.5cm,
+  left=1.5cm,
+  right=1.5cm
 ]{geometry}
 
 \usepackage{setspace}
-\setstretch{1.05}
+\setstretch{1.15}
 
 \usepackage{titlesec}
 \setcounter{secnumdepth}{0}
 
-% H1: 姓名和标题
+% H1: 姓名 - 居中大字
 \titleformat{\section}
-  {\centering\Huge\bfseries\color{PrimaryColor}}
+  {\centering\LARGE\bfseries\color{PrimaryColor}}
   {}
   {0em}
   {}
 
-\titlespacing{\section}{0pt}{0pt}{8pt}
+\titlespacing{\section}{0pt}{0pt}{6pt}
 
-% H2: 章节标题 (带颜色下划线)
+% H2: 章节标题 - 带下划线
 \titleformat{\subsection}
-  {\Large\bfseries\color{PrimaryColor}}
+  {\large\bfseries\color{PrimaryColor}}
   {}
   {0em}
   {}
-  [\vspace{2pt}\textcolor{AccentColor}{\titlerule[1.5pt]}]
+  [\vspace{1pt}{\color{BorderColor}\titlerule[0.5pt]}]
 
-\titlespacing{\subsection}{0pt}{12pt}{8pt}
+\titlespacing{\subsection}{0pt}{10pt}{6pt}
 
-% H3: 公司和职位
+% H3: 公司/项目名称
 \titleformat{\subsubsection}
-  {\large\bfseries\color{SecondaryColor}}
+  {\normalsize\bfseries\color{PrimaryColor}}
   {}
   {0em}
   {}
 
-\titlespacing{\subsubsection}{0pt}{8pt}{4pt}
+\titlespacing{\subsubsection}{0pt}{8pt}{2pt}
 
-% 列表样式优化
+% 段落样式
 \usepackage{enumitem}
 \setlist[itemize]{
-  leftmargin=1.2em,
-  itemsep=3pt,
-  topsep=4pt,
+  leftmargin=1em,
+  itemsep=1pt,
+  topsep=2pt,
   parsep=0pt,
-  label={\textcolor{AccentColor}{\textbullet}}
+  label={\color{AccentColor}\textbullet}
 }
 
-% 超链接样式
+% 超链接
 \usepackage[hidelinks]{hyperref}
 
 % 段落设置
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt}
 
-% 引用块样式 (用于个人简介)
-\usepackage{mdframed}
-\mdfdefinestyle{quotebox}{
-  leftline=true,
-  topline=false,
-  bottomline=false,
-  rightline=false,
-  linewidth=3pt,
-  linecolor=AccentColor,
-  innerleftmargin=10pt,
-  innerrightmargin=0pt,
-  innertopmargin=0pt,
-  innerbottommargin=0pt,
-  skipabove=8pt,
-  skipbelow=8pt
-}
-
-% 表格样式优化
+% 表格样式
 \usepackage{array}
 \usepackage{booktabs}
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.2}
 
-% 字体优化
+% 字体
 \usepackage{fontspec}
 \setmainfont{Noto Sans CJK SC}
 \setsansfont{Noto Sans CJK SC}
 
-% 页眉页脚
+% 页脚
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}
 \renewcommand{\headrulewidth}{0pt}
-\fancyfoot[C]{\textcolor{LightGray}{\small 余胜民 · 全栈软件服务交付工程师 · cv.susuyan.com}}
+\fancyfoot[C]{\color{LightGray}\small 余胜民 · 全栈软件服务交付工程师}

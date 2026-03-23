@@ -1,28 +1,23 @@
 # 余胜民 | 全栈软件服务交付工程师
 
-> 10年软件工程经验，专注端到端技术交付与业务价值落地。具备从需求洞察、架构设计到全栈开发、部署运维的完整闭环能力。
+**10年软件工程经验，专注端到端技术交付与业务价值落地。具备从需求洞察、架构设计到全栈开发、部署运维的完整闭环能力。**
 
-## 联系方式
-
-17600512027 · susuyan@163.com · 微信: susuyan_dream
+**联系方式：** 17600512027 · susuyan@163.com · 微信: susuyan_dream
 
 ## 技术能力
 
-| 领域 | 技术栈 |
-|------|--------|
-| **移动端** | Swift / Objective-C / Flutter / RxSwift / SwiftUI / UIKit |
-| **前端** | TypeScript / React / Vue / Tailwind CSS |
-| **后端** | Node.js / Python / RESTful API / GraphQL / gRPC |
-| **数据** | PostgreSQL / MySQL / Redis / MongoDB / Elasticsearch |
-| **基础设施** | Docker / Kubernetes / AWS / 阿里云 / Nginx / Linux |
-| **工程化** | CI/CD / DevOps / GitHub Actions / Fastlane / 自动化测试 |
-| **AI/自动化** | LLM集成 / 智能体构建 / 工作流自动化 / RAG |
-| **VR/Unity** | Unity 3D / C# / PICO VR SDK / 空间计算 / 数据采集 |
+**移动端：** Swift / Objective-C / Flutter / RxSwift / SwiftUI / UIKit
+**前端：** TypeScript / React / Vue / Tailwind CSS
+**后端：** Node.js / Python / RESTful API / GraphQL / gRPC
+**数据：** PostgreSQL / MySQL / Redis / MongoDB / Elasticsearch
+**基础设施：** Docker / Kubernetes / AWS / 阿里云 / Nginx / Linux
+**工程化：** CI/CD / DevOps / GitHub Actions / Fastlane / 自动化测试
+**AI/自动化：** LLM集成 / 智能体构建 / 工作流自动化 / RAG
+**VR/Unity：** Unity 3D / C# / PICO VR SDK / 空间计算 / 数据采集
 
 ## 工作经历
 
 ### 独立软件服务交付项目【PICO VR 数据采集平台】
-
 **独立交付顾问** · 2025.11 ~ 至今
 
 - **平台架构设计** — 独立设计跨平台 VR 数据采集系统，涵盖 VR 头端采集、Web 管理后台、移动端 App、桌面端导出工具完整产品矩阵
@@ -33,7 +28,6 @@
 - **跨平台导出工具（Tauri + Rust）** — 基于 Tauri 开发桌面端数据导出应用，支持多格式转换（CSV/JSON/Parquet），实现高性能本地数据处理与 Python 数据分析生态的无缝对接
 
 ### 深圳海伦司企业管理有限公司
-
 **软件服务交付工程师** · 2021.04 ~ 2025.09
 
 - **ERP/OA 系统交付** — 主导门店 ERP 与 OA 系统开发，打通采购、库存、人事流程，提升门店运营效率 40%
@@ -41,7 +35,6 @@
 - **工程化建设** — 搭建 CI/CD 流水线，发布周期缩短 60%；建立 Code Review 机制，代码质量显著提升
 
 ### 独立软件服务交付项目【代驾计价】
-
 **独立交付顾问** · 2019.12 ~ 2021.03
 
 - **全栈独立交付** — 独立完成产品规划、UI/UX设计、iOS客户端开发、后端服务搭建、支付对接、应用上架全流程
@@ -49,7 +42,6 @@
 - **核心功能交付** — 基于高德 SDK 实现轨迹绘制与里程计算；集成科大讯飞 SDK 实现驾驶场景全语音控制；独立对接支付宝、微信、银联多渠道支付
 
 ### 北京鱼乐贝贝教育科技有限公司
-
 **技术交付组长** · 2016.12 ~ 2019.12
 
 - **ERP/OA 系统交付** — 主导教育机构 ERP 与 OA 系统开发，覆盖学员管理、课程排班、员工考勤、财务结算核心业务流
@@ -58,7 +50,6 @@
 - **团队能力建设** — 带领 3-4 人移动端团队，主导 Swift 重构 Objective-C 项目，代码量减少 30%，崩溃率降至 0.1% 以下
 
 ### 北京亿维鸿科技有限公司
-
 **软件工程师** · 2015.07 ~ 2016.11
 
 - **工具类产品交付** — 负责《手机归属地》《手机管家》等工具类 App 的全栈开发与交付
@@ -67,7 +58,7 @@
 
 ## 教育背景
 
-洛阳理工学院 · 计算机应用专业
+**洛阳理工学院** · 计算机应用专业
 
 ## 自我定位
 
