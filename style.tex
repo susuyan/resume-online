@@ -1,71 +1,78 @@
 % =========================
-% Resume Style for pdf2htmlEX
+% Resume Style v2 - Modern Professional
 % =========================
 
 \usepackage{xcolor}
-\definecolor{PrimaryColor}{HTML}{2C3E50}
-\definecolor{SecondaryColor}{HTML}{34495E}
-\definecolor{AccentColor}{HTML}{3498DB}
-\definecolor{TextColor}{HTML}{333333}
-\definecolor{LightGray}{HTML}{7F8C8D}
+% 现代化配色方案 - 深靛蓝主色 + 暖金色强调
+\definecolor{PrimaryColor}{HTML}{1A365D}
+\definecolor{SecondaryColor}{HTML}{2C5282}
+\definecolor{AccentColor}{HTML}{C05621}
+\definecolor{TextColor}{HTML}{2D3748}
+\definecolor{LightGray}{HTML}{718096}
+\definecolor{UltraLight}{HTML}{EDF2F7}
+\definecolor{BorderColor}{HTML}{E2E8F0}
 
 \usepackage[
-  top=0.8cm,
-  bottom=0.8cm,
-  left=1.2cm,
-  right=1.2cm
+  top=0.7cm,
+  bottom=0.7cm,
+  left=1.0cm,
+  right=1.0cm
 ]{geometry}
 
 \usepackage{setspace}
-\setstretch{1.15}
+\setstretch{1.12}
 
 \usepackage{titlesec}
 \setcounter{secnumdepth}{0}
 
-% H1: 姓名（使用 center 环境确保居中）
+% H1: 姓名 - 更精致的设计
 \usepackage{sectsty}
 \sectionfont{\centering\Huge\bfseries\color{PrimaryColor}}
 
-\titlespacing{\section}{0pt}{0pt}{10pt}
+\titlespacing{\section}{0pt}{0pt}{8pt}
 
-% H2: 章节标题 (下划线)
+% H2: 章节标题 - 左侧色块+文字设计
 \titleformat{\subsection}
   {\Large\bfseries\color{PrimaryColor}}
   {}
   {0em}
   {}
-  [\titlerule]
+  [\vspace{-4pt}\textcolor{AccentColor}{\rule{\linewidth}{1.5pt}}]
 
-\titlespacing{\subsection}{0pt}{12pt}{6pt}
+\titlespacing{\subsection}{0pt}{14pt}{8pt}
 
-% H3: 子标题
+% H3: 子标题 - 公司/职位名
 \titleformat{\subsubsection}
   {\large\bfseries\color{SecondaryColor}}
   {}
   {0em}
   {}
 
-\titlespacing{\subsubsection}{0pt}{4pt}{2pt}
+\titlespacing{\subsubsection}{0pt}{6pt}{3pt}
 
+% 项目符号列表 - 使用实心圆点
 \usepackage{enumitem}
 \setlist[itemize]{
-  leftmargin=1.5em,
-  itemsep=3pt,
+  leftmargin=1.4em,
+  itemsep=2pt,
   topsep=4pt,
-  parsep=0pt
+  parsep=0pt,
+  label={\textcolor{AccentColor}{\textbullet}}
 }
 
 \usepackage[hidelinks]{hyperref}
 \setlength{\parindent}{0pt}
 
-% 表格样式
-\usepackage{booktabs}
-\usepackage{array}
-\renewcommand{\arraystretch}{1.3}
-
 % 防止文字溢出
 \sloppy
-\tolerance=2000
-\emergencystretch=4em
+\tolerance=1000
+\emergencystretch=3em
 \hyphenpenalty=10000
 \exhyphenpenalty=10000
+
+% 段落间距微调
+\setlength{\parskip}{3pt}
+
+% 引入tikz用于绘制装饰元素
+\usepackage{tikz}
+\usetikzlibrary{calc}
