@@ -1,113 +1,124 @@
 % =========================
-% Resume Style - Final Version
-% Professional & Optimized for Single Page
+% Resume Style - Final Optimized for One Page
+% Full-Stack Software Engineer Resume
 % =========================
 
 % =========================
 % 基础包
 % =========================
 \usepackage{xcolor}
-\usepackage[top=0.7cm,bottom=0.7cm,left=1.0cm,right=1.0cm]{geometry}
+\usepackage[top=0.6cm,bottom=0.6cm,left=0.8cm,right=0.8cm]{geometry}
 \usepackage{setspace}
-\usepackage{graphicx}
 \usepackage{array}
 \usepackage{tabularx}
+\usepackage{booktabs}
 
 % =========================
-% 专业配色方案 - 低调稳重
+% 专业配色方案
 % =========================
-\definecolor{PrimaryColor}{HTML}{1A2530}
-\definecolor{SecondaryColor}{HTML}{2C3E50}
-\definecolor{AccentColor}{HTML}{5D6D7E}
-\definecolor{LightGray}{HTML}{85929E}
-\definecolor{SectionBg}{HTML}{F4F6F7}
-\definecolor{SkillBg}{HTML}{EBF0F2}
-\definecolor{TextColor}{HTML}{2C3E50}
+\definecolor{PrimaryColor}{HTML}{1A365D}
+\definecolor{SecondaryColor}{HTML}{2C5282}
+\definecolor{AccentColor}{HTML}{C05621}
+\definecolor{LightGray}{HTML}{718096}
+\definecolor{TextColor}{HTML}{2D3748}
+\definecolor{BorderColor}{HTML}{E2E8F0}
+\definecolor{HeaderBg}{HTML}{EDF2F7}
 
 % =========================
-% 页面布局 - 单页优化
+% 页面布局 - 单页紧凑优化
 % =========================
-\setstretch{1.12}
+\setstretch{1.05}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt}
+\pagestyle{empty}
 
 % =========================
 % 字体配置 - XeLaTeX优化
 % =========================
 \usepackage{fontspec}
 \usepackage{xeCJK}
-\setCJKmainfont{Noto Sans CJK SC}
+
+% 英文字体 - 适合技术简历的无衬线字体
+\setmainfont{Source Sans Pro}[
+  UprightFont=*-Regular,
+  BoldFont=*-Bold,
+  ItalicFont=*-Italic,
+  BoldItalicFont=*-BoldItalic
+]
+
+% 中文字体
+\setCJKmainfont{Noto Sans CJK SC}[
+  BoldFont=Noto Sans CJK SC Bold,
+  ItalicFont=Noto Sans CJK SC Light
+]
+
+% 中文换行优化
 \XeTeXlinebreaklocale "zh"
-\XeTeXlinebreakskip = 0pt plus 0.2pt
+\XeTeXlinebreakskip = 0pt plus 0.1pt
 
 % =========================
 % 页面优化
 % =========================
 \sloppy
-\tolerance=1500
-\emergencystretch=1.5em
+\tolerance=1000
+\emergencystretch=1em
 \hyphenpenalty=10000
 \exhyphenpenalty=10000
-
-% 防止孤行寡行
 \clubpenalty=10000
 \widowpenalty=10000
 
 % =========================
-% 自定义命令
+% 兼容性保障（Pandoc生成所需）
 % =========================
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}%
+}
 
+\providecommand{\subtitle}[1]{}
+
+% =========================
 % 章节标题样式
-\newcommand{\sectiontitle}[1]{%
-  \vspace{8pt}%
-  \noindent%
-  \colorbox{SectionBg}{%
-    \parbox{\dimexpr\linewidth-2\fboxsep\relax}{%
-      \vspace{4pt}%
-      \textbf{\large\color{PrimaryColor}#1}%
-      \vspace{4pt}%
-    }%
-  }%
+% =========================
+\let\oldsection\section
+\renewcommand{\section}[1]{%
   \vspace{6pt}%
+  {\color{PrimaryColor}\bfseries\normalsize #1}%
+  \vspace{2pt}%
+  {\color{BorderColor}\hrule height 0.8pt}%
+  \vspace{3pt}%
 }
 
-% 职位标题
-\newcommand{\jobtitle}[3]{%
-  \noindent%
-  \textbf{\color{SecondaryColor}#1} \hfill {\small\color{LightGray}#3}\\[-2pt]
-  \noindent{\color{AccentColor}#2}%
+\let\oldsubsection\subsection
+\renewcommand{\subsection}[1]{%
   \vspace{4pt}%
-}
-
-% 技能分类标签
-\newcommand{\skillcategory}[1]{%
-  \textbf{\color{SecondaryColor}#1:}%
-}
-
-% 技能项
-\newcommand{\skillitem}[1]{%
-  \colorbox{SkillBg}{\textcolor{PrimaryColor}{\small #1}}%
-}
-
-% 分隔线
-\newcommand{\sectionline}{%
-  \vspace{4pt}%
-  \noindent\rule{\linewidth}{0.4pt}%
-  \vspace{4pt}%
+  {\bfseries\color{SecondaryColor}#1}%
+  \vspace{2pt}%
 }
 
 % =========================
-% 表格样式优化
+% 表格样式 - 工作经历时间线
 % =========================
-\usepackage{booktabs}
-\renewcommand{\arraystretch}{1.2}
+\renewcommand{\arraystretch}{1.1}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+\arrayrulecolor{BorderColor}
+
+% =========================
+% 列表样式 - 紧凑
+% =========================
+\renewcommand{\labelitemi}{{\color{AccentColor}\textbullet}}
+\setlength{\leftmargini}{1.2em}
+\setlength{\itemsep}{1pt}
+\setlength{\parsep}{0pt}
+\setlength{\topsep}{2pt}
 
 % =========================
 % 超链接样式
 % =========================
-\usepackage[colorlinks=true,linkcolor=AccentColor,urlcolor=AccentColor]{hyperref}
-
-% =========================
-% 页眉页脚
-% =========================
-\pagestyle{empty}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=SecondaryColor,
+  urlcolor=AccentColor
+}
