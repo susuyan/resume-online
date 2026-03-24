@@ -31,26 +31,13 @@ jobs:
       - name: Build PDF
         run: xelatex -interaction=nonstopmode resume.tex
 
-      # 2️⃣ PDF → HTML（pdf2htmlEX）
-      - name: Convert PDF to HTML
-        run: |
-          docker run --rm \
-            -v "$PWD":/pdf \
-            -w /pdf \
-            pdf2htmlex/pdf2htmlex:0.18.8.rc2-master-20200820-ubuntu-20.04-x86_64 \
-            --zoom 1.5 \
-            --process-outline 0 \
-            resume.pdf
-
-          mv resume.html index.html
-
-      # 3️⃣ 准备 Pages 产物
+      # 2️⃣ 准备站点文件
       - name: Prepare site
         run: |
           mkdir site
-          mv index.html site/
-          mv resume.pdf site/
-          [ -f CNAME ] && mv CNAME site/ || true
+          cp index.html site/
+          cp resume.pdf site/
+          [ -f CNAME ] && cp CNAME site/ || true
 
       # 4️⃣ 上传
       - name: Upload artifact
