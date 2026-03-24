@@ -30,7 +30,7 @@ jobs:
 
       - name: Build PDF
         run: |
-          pandoc resume.md -o resume.tex \
+          pandoc resume.md -o resume.pdf \
             --template=style.tex \
             --pdf-engine=xelatex
 
