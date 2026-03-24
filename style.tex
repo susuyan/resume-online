@@ -38,14 +38,9 @@
 \usepackage{fontspec}
 \usepackage{xeCJK}
 
-% 英文字体 - 使用TeX Gyre Heros（类似Helvetica，texlive标准字体）
-\setmainfont{TeX Gyre Heros}[
-  Extension=.otf,
-  UprightFont=*-regular,
-  BoldFont=*-bold,
-  ItalicFont=*-italic,
-  BoldItalicFont=*-bolditalic
-]
+% 英文字体 - 使用 Latin Modern Sans（texlive 标准字体）
+\setsansfont{Latin Modern Sans}
+\renewcommand{\familydefault}{\sfdefault}
 
 % 中文字体
 \setCJKmainfont{Noto Sans CJK SC}[
