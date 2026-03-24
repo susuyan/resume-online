@@ -22,19 +22,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 1️⃣ Markdown → PDF
-      - name: Install pandoc
-        run: sudo apt-get update && sudo apt-get install -y pandoc texlive-xetex fonts-noto-cjk
+      # 1️⃣ LaTeX → PDF
+      - name: Install TeX Live
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive-xetex texlive-latex-extra fonts-noto-cjk
 
       - name: Build PDF
-        run: |
-          pandoc resume.md \
-            --pdf-engine=xelatex \
-            --include-in-header=style.tex \
-            -V mainfont="Noto Sans CJK SC" \
-            -V fontsize=9pt \
-            -V papersize=a4 \
-            -o resume.pdf
+        run: xelatex -interaction=nonstopmode resume.tex
 
       # 2️⃣ PDF → HTML（pdf2htmlEX）
       - name: Convert PDF to HTML
