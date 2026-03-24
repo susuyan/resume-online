@@ -93,11 +93,16 @@
 \setlength{\parskip}{1pt}
 
 % =========================
-% 排版优化
+% 中文换行优化
 % =========================
+\usepackage{xeCJK}
+\setCJKmainfont{Noto Sans CJK SC}
+\XeTeXlinebreaklocale "zh"
+\XeTeXlinebreakskip = 0pt plus 1pt
+
 \sloppy
-\tolerance=1000
-\emergencystretch=2em
+\tolerance=3000
+\emergencystretch=3em
 \hyphenpenalty=10000
 \exhyphenpenalty=10000
 
