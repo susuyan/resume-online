@@ -1,126 +1,113 @@
 % =========================
-% Resume Style - One Page Professional
+% Resume Style - Final Version
+% Professional & Optimized for Single Page
 % =========================
 
+% =========================
+% 基础包
+% =========================
 \usepackage{xcolor}
-% 专业配色方案
-\definecolor{PrimaryColor}{HTML}{1A365D}
-\definecolor{SecondaryColor}{HTML}{2C5282}
-\definecolor{AccentColor}{HTML}{C05621}
-\definecolor{TextColor}{HTML}{2D3748}
-\definecolor{LightGray}{HTML}{718096}
-\definecolor{BorderColor}{HTML}{E2E8F0}
-
-% 紧凑边距 - 为单页优化
-\usepackage[
-  top=0.6cm,
-  bottom=0.6cm,
-  left=0.8cm,
-  right=0.8cm
-]{geometry}
-
-% 行高 - 紧凑但可读
+\usepackage[top=0.7cm,bottom=0.7cm,left=1.0cm,right=1.0cm]{geometry}
 \usepackage{setspace}
-\setstretch{1.05}
-
-\usepackage{titlesec}
-\setcounter{secnumdepth}{0}
-
-% =========================
-% 头部样式 - 姓名和职位
-% =========================
-\usepackage{sectsty}
-\sectionfont{\centering\LARGE\bfseries\color{PrimaryColor}}
-
-\titlespacing{\section}{0pt}{0pt}{4pt}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{tabularx}
 
 % =========================
-% 章节标题样式
+% 专业配色方案 - 低调稳重
 % =========================
-\titleformat{\subsection}
-  {\normalsize\bfseries\color{PrimaryColor}\uppercase}
-  {}
-  {0em}
-  {}
-  [\vspace{-4pt}\textcolor{AccentColor}{\rule{\linewidth}{1pt}}]
-
-\titlespacing{\subsection}{0pt}{8pt}{5pt}
-
-% =========================
-% 公司/职位标题
-% =========================
-\titleformat{\subsubsection}
-  {\small\bfseries\color{SecondaryColor}}
-  {}
-  {0em}
-  {}
-
-\titlespacing{\subsubsection}{0pt}{4pt}{1pt}
+\definecolor{PrimaryColor}{HTML}{1A2530}
+\definecolor{SecondaryColor}{HTML}{2C3E50}
+\definecolor{AccentColor}{HTML}{5D6D7E}
+\definecolor{LightGray}{HTML}{85929E}
+\definecolor{SectionBg}{HTML}{F4F6F7}
+\definecolor{SkillBg}{HTML}{EBF0F2}
+\definecolor{TextColor}{HTML}{2C3E50}
 
 % =========================
-% 列表样式 - 超紧凑
+% 页面布局 - 单页优化
 % =========================
-\usepackage{enumitem}
-\setlist[itemize]{
-  leftmargin=1.2em,
-  itemsep=0pt,
-  topsep=2pt,
-  parsep=0pt,
-  labelsep=0.3em,
-  label={\textcolor{AccentColor}{\textbullet}}
-}
-
-% 嵌套列表
-\setlist[itemize,2]{
-  leftmargin=1em,
-  itemsep=0pt,
-  topsep=1pt,
-  parsep=0pt,
-  label={\textcolor{AccentColor}{\scriptsize$\circ$}}
-}
-
-% =========================
-% 双栏布局支持
-% =========================
-\usepackage{multicol}
-\setlength{\columnsep}{0.8em}
-
-% =========================
-% 超链接
-% =========================
-\usepackage[hidelinks]{hyperref}
+\setstretch{1.12}
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{1pt}
+\setlength{\parskip}{0pt}
 
 % =========================
-% 中文换行优化
+% 字体配置 - XeLaTeX优化
 % =========================
+\usepackage{fontspec}
 \usepackage{xeCJK}
 \setCJKmainfont{Noto Sans CJK SC}
 \XeTeXlinebreaklocale "zh"
-\XeTeXlinebreakskip = 0pt plus 1pt
+\XeTeXlinebreakskip = 0pt plus 0.2pt
 
+% =========================
+% 页面优化
+% =========================
 \sloppy
-\tolerance=3000
-\emergencystretch=3em
+\tolerance=1500
+\emergencystretch=1.5em
 \hyphenpenalty=10000
 \exhyphenpenalty=10000
 
+% 防止孤行寡行
+\clubpenalty=10000
+\widowpenalty=10000
+
 % =========================
-% 自定义命令 - 技能标签
+% 自定义命令
 % =========================
+
+% 章节标题样式
+\newcommand{\sectiontitle}[1]{%
+  \vspace{8pt}%
+  \noindent%
+  \colorbox{SectionBg}{%
+    \parbox{\dimexpr\linewidth-2\fboxsep\relax}{%
+      \vspace{4pt}%
+      \textbf{\large\color{PrimaryColor}#1}%
+      \vspace{4pt}%
+    }%
+  }%
+  \vspace{6pt}%
+}
+
+% 职位标题
+\newcommand{\jobtitle}[3]{%
+  \noindent%
+  \textbf{\color{SecondaryColor}#1} \hfill {\small\color{LightGray}#3}\\[-2pt]
+  \noindent{\color{AccentColor}#2}%
+  \vspace{4pt}%
+}
+
+% 技能分类标签
+\newcommand{\skillcategory}[1]{%
+  \textbf{\color{SecondaryColor}#1:}%
+}
+
+% 技能项
 \newcommand{\skillitem}[1]{%
-  \textcolor{TextColor}{#1}%
+  \colorbox{SkillBg}{\textcolor{PrimaryColor}{\small #1}}%
 }
 
-% 公司职位行格式
-\newcommand{\jobline}[3]{%
-  {\small\bfseries\color{SecondaryColor}#1} \hfill {\footnotesize\color{LightGray}#2}\\[-2pt]
-  {\footnotesize\color{TextColor}#3}%
+% 分隔线
+\newcommand{\sectionline}{%
+  \vspace{4pt}%
+  \noindent\rule{\linewidth}{0.4pt}%
+  \vspace{4pt}%
 }
 
 % =========================
-% 表格工具
+% 表格样式优化
 % =========================
-\usepackage{array}
-\usepackage{tabularx}
+\usepackage{booktabs}
+\renewcommand{\arraystretch}{1.2}
+
+% =========================
+% 超链接样式
+% =========================
+\usepackage[colorlinks=true,linkcolor=AccentColor,urlcolor=AccentColor]{hyperref}
+
+% =========================
+% 页眉页脚
+% =========================
+\pagestyle{empty}
