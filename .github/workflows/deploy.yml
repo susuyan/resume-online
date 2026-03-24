@@ -31,8 +31,11 @@ jobs:
       - name: Build PDF
         run: |
           pandoc resume.md -o resume.pdf \
-            --template=style.tex \
-            --pdf-engine=xelatex
+            --pdf-engine=xelatex \
+            --include-in-header=style.tex \
+            -V mainfont="Noto Sans CJK SC" \
+            -V fontsize=10pt \
+            -V papersize=a4
 
       # 2️⃣ PDF → HTML（pdf2htmlEX）
       - name: Convert PDF to HTML
