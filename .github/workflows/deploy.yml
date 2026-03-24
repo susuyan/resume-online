@@ -22,22 +22,38 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 1️⃣ LaTeX → PDF
-      - name: Install TeX Live
+      # 1️⃣ Markdown → LaTeX → PDF
+      - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y texlive-xetex texlive-latex-extra fonts-noto-cjk
+          sudo apt-get install -y pandoc texlive-xetex texlive-latex-extra fonts-noto-cjk
 
       - name: Build PDF
-        run: xelatex -interaction=nonstopmode resume.tex
+        run: |
+          pandoc resume.md -o resume.tex \
+            --template=style.tex \
+            --pdf-engine=xelatex
 
-      # 2️⃣ 准备站点文件
+      # 2️⃣ PDF → HTML（pdf2htmlEX）
+      - name: Convert PDF to HTML
+        run: |
+          docker run --rm \
+            -v "$PWD":/pdf \
+            -w /pdf \
+            pdf2htmlex/pdf2htmlex:0.18.8.rc2-master-20200820-ubuntu-20.04-x86_64 \
+            --zoom 1.5 \
+            --process-outline 0 \
+            resume.pdf
+
+          mv resume.html index.html
+
+      # 3️⃣ 准备 Pages 产物
       - name: Prepare site
         run: |
           mkdir site
-          cp index.html site/
-          cp resume.pdf site/
-          [ -f CNAME ] && cp CNAME site/ || true
+          mv index.html site/
+          mv resume.pdf site/
+          [ -f CNAME ] && mv CNAME site/ || true
 
       # 4️⃣ 上传
       - name: Upload artifact
