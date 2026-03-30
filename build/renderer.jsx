@@ -372,6 +372,9 @@ window.renderResume = (markdown, config = {}) => {
   // Create React root and render
   const rootElement = React.createElement(Resume, { markdown, config });
   ReactDOM.render(rootElement, root);
+
+  // Signal that rendering is complete for Puppeteer
+  window.resumeRendered = true;
 };
 
 // Export for module usage
