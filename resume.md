@@ -6,6 +6,12 @@
 
 ---
 
+## 核心优势
+
+AI-Native (效率提升40%) · Full-Cycle (交付缩短30%) · High-Performance (10K+/秒) · Business Impact (500+门店)
+
+---
+
 ## 工作经历
 
 | 时间 | 公司 | 职位 | 核心成果 |
@@ -40,15 +46,9 @@
 
 ---
 
-## 技术能力
+## 技能
 
-**移动端**：Swift · Objective-C · Flutter · RxSwift · SwiftUI · UIKit · MVVM
-**前端**：TypeScript · React · Vue · Next.js · Tailwind CSS
-**后端**：Node.js · Python · RESTful API · GraphQL · gRPC · 微服务
-**数据**：PostgreSQL · MySQL · Redis · MongoDB · Elasticsearch
-**基础设施**：Docker · Kubernetes · AWS · 阿里云 · Nginx · CI/CD
-**AI/自动化**：LLM集成 · RAG · 工作流自动化 · Claude Code
-**VR/Unity**：Unity 3D · C# · PICO VR SDK
+TypeScript · React · Python · Node.js · Docker · Claude Code · Cursor · Swift · PostgreSQL · Kubernetes · AWS · Flutter · Unity 3D · C# · CI/CD · 系统设计 · 快速交付 · 全栈思维 · AI 工具链集成
 
 ---
 
