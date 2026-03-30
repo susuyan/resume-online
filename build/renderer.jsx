@@ -1,0 +1,290 @@
+import { prepareWithSegments, layout, layoutWithLines } from "@chenglou/pretext";
+
+/* ── Page constants ────────────────────────────────────────── */
+const PAGE_W = 620;
+const PAGE_H = Math.round(PAGE_W * (297 / 210));
+const DEFAULT_PAD = 40;
+const FONT = "InterVariable, sans-serif";
+const LH_MIN = 1.15;
+const LH_MAX = 1.8;
+const LH_DEFAULT = 1.5;
+const FS_MAX_DEFAULT = 14;
+
+/* ── Parse markdown into blocks ────────────────────────────── */
+function parseMarkdown(md) {
+  const blocks = [];
+  const lines = md.split("\n");
+  let i = 0;
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    if (line.trim() === "---") {
+      blocks.push({ type: "hr", mb: 16 });
+      i++;
+      continue;
+    }
+
+    if (line.trim() === "") {
+      i++;
+      continue;
+    }
+
+    if (line.startsWith("# ")) {
+      blocks.push({ text: line.slice(2), fontScale: 1.5, bold: true, mb: 4, color: "#111" });
+      i++;
+      continue;
+    }
+
+    if (line.startsWith("## ")) {
+      blocks.push({ text: line.slice(3), fontScale: 0.85, bold: true, mt: 18, mb: 3, color: "#999" });
+      i++;
+      continue;
+    }
+
+    if (line.startsWith("### ")) {
+      const prev = blocks[blocks.length - 1];
+      const afterSection = prev && prev.fontScale === 0.85 && prev.bold;
+      blocks.push({ text: line.slice(4), fontScale: 1, bold: true, mt: afterSection ? 0 : 10, mb: 2, color: "#111" });
+      i++;
+      continue;
+    }
+
+    if (line.startsWith("- ")) {
+      blocks.push({ text: "\u2022 " + line.slice(2), fontScale: 1, bold: false, mb: 3, color: "#555" });
+      i++;
+      continue;
+    }
+
+    const prevBlock = blocks[blocks.length - 1];
+    const isAfterTitle = prevBlock && prevBlock.bold && prevBlock.fontScale === 1 && prevBlock.mb === 2;
+
+    if (isAfterTitle) {
+      blocks.push({ text: line, fontScale: 0.8, bold: false, mb: 6, color: "#999" });
+    } else if (prevBlock && prevBlock.fontScale === 1.5) {
+      blocks.push({ text: line, fontScale: 1, bold: false, mb: 6, color: "#555" });
+    } else if (prevBlock && !prevBlock.bold && prevBlock.color === "#555" && prevBlock.mb === 6 && prevBlock.fontScale === 1) {
+      blocks.push({ text: line, fontScale: 0.8, bold: false, mb: 16, color: "#999" });
+    } else {
+      blocks.push({ text: line, fontScale: 1, bold: false, mb: 6, color: "#333" });
+    }
+    i++;
+  }
+
+  return blocks;
+}
+
+/* ── Build font string (same for prepare + DOM) ──────────── */
+function fontString(baseFontSize, block) {
+  const fs = baseFontSize * block.fontScale;
+  return `${block.bold ? "bold " : ""}${fs}px ${FONT}`;
+}
+
+/* ── Measure blocks (pure math, no DOM) ────────────────────── */
+function measureBlocks(blocks, baseFontSize, contentW, lhMult = LH_DEFAULT, sectionSpacing = 18, itemSpacing = 10, separatorSpacing = 16) {
+  let h = 0;
+  for (let idx = 0; idx < blocks.length; idx++) {
+    const block = blocks[idx];
+    if (block.mt) {
+      const isSection = block.fontScale === 0.85 && block.bold;
+      const isItem = block.mt > 0 && !isSection;
+      h += isSection ? sectionSpacing : isItem ? itemSpacing : block.mt;
+    }
+    if (block.type === "hr") {
+      h += separatorSpacing + 1 + separatorSpacing;
+      continue;
+    }
+    const fs = baseFontSize * block.fontScale;
+    const lh = fs * lhMult;
+    const font = fontString(baseFontSize, block);
+    h += layout(prepareWithSegments(block.text, font), contentW, lh).height;
+    // Skip mb if the next block has mt or is an hr (spacing is handled by them)
+    const next = blocks[idx + 1];
+    if (next && (next.mt || next.type === "hr")) continue;
+    h += block.mb;
+  }
+  return h;
+}
+
+/* ── Layout blocks into positioned lines ─────────────────── */
+function layoutBlocks(blocks, baseFontSize, contentW, pad, lhMult = LH_DEFAULT, sectionSpacing = 18, itemSpacing = 10, separatorSpacing = 16) {
+  const positioned = [];
+  let y = pad;
+
+  for (let idx = 0; idx < blocks.length; idx++) {
+    const block = blocks[idx];
+    if (block.mt) {
+      const isSection = block.fontScale === 0.85 && block.bold;
+      const isItem = block.mt > 0 && !isSection;
+      y += isSection ? sectionSpacing : isItem ? itemSpacing : block.mt;
+    }
+    if (block.type === "hr") {
+      y += separatorSpacing;
+      positioned.push({ type: "hr", y });
+      y += 1 + separatorSpacing;
+      continue;
+    }
+
+    const fs = baseFontSize * block.fontScale;
+    const lh = fs * lhMult;
+    const font = fontString(baseFontSize, block);
+    const prepared = prepareWithSegments(block.text, font);
+    const result = layoutWithLines(prepared, contentW, lh);
+
+    for (const line of result.lines) {
+      positioned.push({
+        type: "text",
+        text: line.text,
+        x: pad,
+        y,
+        font,
+        fontSize: fs,
+        fontWeight: block.bold ? "bold" : "normal",
+        lineHeight: lh,
+        color: block.color,
+      });
+      y += lh;
+    }
+
+    // Skip mb if the next block has mt or is an hr (spacing is handled by them)
+    const next = blocks[idx + 1];
+    if (next && (next.mt || next.type === "hr")) continue;
+    y += block.mb;
+  }
+
+  return positioned;
+}
+
+/* ── Binary search for optimal font size + line height ────── */
+function findOptimalFit(blocks, contentW, maxH, minFs = 6, maxFs = 24, sectionSpacing = 18, itemSpacing = 10, separatorSpacing = 16) {
+  // Pass 1: max font size at tightest line spacing
+  let lo = minFs;
+  let hi = maxFs;
+  while (hi - lo > 0.01) {
+    const mid = (lo + hi) / 2;
+    if (measureBlocks(blocks, mid, contentW, LH_MIN, sectionSpacing, itemSpacing, separatorSpacing) <= maxH) lo = mid;
+    else hi = mid;
+  }
+  const fontSize = Math.floor(lo * 100) / 100;
+
+  // Pass 2: expand line-height to fill remaining space
+  let lhLo = LH_MIN;
+  let lhHi = LH_MAX;
+  while (lhHi - lhLo > 0.001) {
+    const mid = (lhLo + lhHi) / 2;
+    if (measureBlocks(blocks, fontSize, contentW, mid, sectionSpacing, itemSpacing, separatorSpacing) <= maxH) lhLo = mid;
+    else lhHi = mid;
+  }
+  const lineHeightMult = Math.floor(lhLo * 1000) / 1000;
+
+  return { fontSize, lineHeightMult };
+}
+
+/* ── Resume Rendering Component ─────────────────────────────── */
+function Resume({ markdown, config = {} }) {
+  const {
+    padding = DEFAULT_PAD,
+    maxFontSize = FS_MAX_DEFAULT,
+    sectionSpacing = 18,
+    itemSpacing = 10,
+    separatorSpacing = 16,
+  } = config;
+
+  const contentW = PAGE_W - padding * 2;
+  const maxH = PAGE_H - padding * 2;
+
+  // Parse markdown into blocks
+  const blocks = parseMarkdown(markdown);
+
+  // Find optimal font size and line height
+  const { fontSize, lineHeightMult } = findOptimalFit(
+    blocks,
+    contentW,
+    maxH,
+    6,
+    24,
+    sectionSpacing,
+    itemSpacing,
+    separatorSpacing
+  );
+
+  // Cap font size at maxFontSize
+  const finalFontSize = Math.min(fontSize, maxFontSize);
+
+  // Layout blocks into positioned lines
+  const positioned = layoutBlocks(
+    blocks,
+    finalFontSize,
+    contentW,
+    padding,
+    lineHeightMult,
+    sectionSpacing,
+    itemSpacing,
+    separatorSpacing
+  );
+
+  // Render
+  return (
+    <div
+      data-pagefit-page
+      className="relative bg-white"
+      style={{
+        width: PAGE_W,
+        height: PAGE_H,
+        overflow: "hidden",
+      }}
+    >
+      {positioned.map((item, i) => {
+        if (item.type === "hr") {
+          return (
+            <div
+              key={i}
+              style={{
+                position: "absolute",
+                left: padding,
+                right: padding,
+                top: item.y,
+                height: 1,
+                backgroundColor: "#ddd",
+              }}
+            />
+          );
+        }
+        return (
+          <div
+            key={i}
+            style={{
+              position: "absolute",
+              left: item.x,
+              top: item.y,
+              fontSize: item.fontSize,
+              fontWeight: item.fontWeight,
+              fontFamily: FONT,
+              lineHeight: `${item.lineHeight}px`,
+              color: item.color,
+              whiteSpace: "pre",
+            }}
+          >
+            {item.text}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ── Entry Point for Puppeteer ─────────────────────────────── */
+window.renderResume = (markdown, config = {}) => {
+  const root = document.getElementById("root");
+  if (!root) {
+    console.error("Root element not found");
+    return;
+  }
+
+  // Create React root and render
+  const rootElement = React.createElement(Resume, { markdown, config });
+  ReactDOM.render(rootElement, root);
+};
+
+// Export for module usage
+export { Resume, parseMarkdown, findOptimalFit, layoutBlocks, measureBlocks };
