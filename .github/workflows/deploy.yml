@@ -22,21 +22,41 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 1️⃣ Markdown → LaTeX → PDF
+      # 1️⃣ 安装 Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: build/package-lock.json
+
+      # 2️⃣ 安装依赖
       - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y pandoc texlive-xetex texlive-latex-extra texlive-lang-chinese fonts-noto-cjk
+          cd build
+          npm ci
 
-      - name: Build PDF
+      # 3️⃣ 安装 Puppeteer（需要 Chrome）
+      - name: Install Puppeteer browsers
         run: |
-          pandoc resume.md -o resume.pdf \
-            --pdf-engine=xelatex \
-            --include-in-header=style.tex \
-            -V fontsize=10pt \
-            -V papersize=a4
+          cd build
+          npx puppeteer browsers install chrome
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: false
 
-      # 2️⃣ PDF → HTML（pdf2htmlEX）
+      # 4️⃣ Vite 打包 React 组件
+      - name: Build React app
+        run: |
+          cd build
+          npm run build:vite
+
+      # 5️⃣ Puppeteer 生成 PDF
+      - name: Generate PDF
+        run: |
+          cd build
+          node build-pdf.js
+
+      # 6️⃣ PDF → HTML（保留 pdf2htmlEX）
       - name: Convert PDF to HTML
         run: |
           docker run --rm \
@@ -49,7 +69,7 @@ jobs:
 
           mv resume.html index.html
 
-      # 3️⃣ 准备 Pages 产物
+      # 7️⃣ 准备 Pages 产物
       - name: Prepare site
         run: |
           mkdir site
@@ -57,7 +77,7 @@ jobs:
           mv resume.pdf site/
           [ -f CNAME ] && mv CNAME site/ || true
 
-      # 4️⃣ 上传
+      # 8️⃣ 上传
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
