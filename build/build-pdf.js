@@ -53,6 +53,11 @@ async function buildResumePDF() {
 
     console.log('注入简历内容...');
 
+    // 等待 renderResume 函数可用
+    await page.waitForFunction(() => typeof window.renderResume === 'function', {
+      timeout: 15000
+    });
+
     // 注入简历内容和配置
     await page.evaluate((markdown, config) => {
       window.renderResume(markdown, config);

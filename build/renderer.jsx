@@ -1,3 +1,6 @@
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
 import { prepareWithSegments, layout, layoutWithLines } from "@chenglou/pretext";
 
 /* ── Page constants ────────────────────────────────────────── */
@@ -363,15 +366,15 @@ function Resume({ markdown, config = {} }) {
 
 /* ── Entry Point for Puppeteer ─────────────────────────────── */
 window.renderResume = (markdown, config = {}) => {
-  const root = document.getElementById("root");
-  if (!root) {
+  const rootElement = document.getElementById("root");
+  if (!rootElement) {
     console.error("Root element not found");
     return;
   }
 
   // Create React root and render
-  const rootElement = React.createElement(Resume, { markdown, config });
-  ReactDOM.render(rootElement, root);
+  const root = createRoot(rootElement);
+  root.render(React.createElement(Resume, { markdown, config }));
 
   // Signal that rendering is complete for Puppeteer
   window.resumeRendered = true;

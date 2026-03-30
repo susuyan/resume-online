@@ -16,7 +16,9 @@ export default defineConfig({
       },
       output: {
         entryFileNames: 'renderer.bundle.js',
-        assetFileNames: 'index.css'
+        assetFileNames: 'index.css',
+        format: 'iife',
+        name: 'ResumeRenderer'
       }
     }
   }
