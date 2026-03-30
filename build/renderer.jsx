@@ -58,6 +58,7 @@ function parseMarkdown(md) {
   const blocks = [];
   const lines = md.split("\n");
   let i = 0;
+  let currentSection = null;
 
   while (i < lines.length) {
     const line = lines[i];
@@ -84,7 +85,52 @@ function parseMarkdown(md) {
 
     // H2 section header
     if (line.startsWith("## ")) {
-      blocks.push({ text: processInlineBold(line.slice(3)), fontScale: 0.85, bold: true, mt: 18, mb: 3, color: "#999" });
+      const sectionTitle = line.slice(3);
+
+      // Track current section
+      if (sectionTitle === "核心优势") {
+        currentSection = "core-strengths";
+      } else if (sectionTitle === "技能") {
+        currentSection = "skills";
+      } else {
+        currentSection = null;
+      }
+
+      blocks.push({ text: processInlineBold(sectionTitle), fontScale: 0.85, bold: true, mt: 18, mb: 3, color: "#999" });
+      i++;
+      continue;
+    }
+
+    // Core strengths content
+    if (currentSection === "core-strengths" && line.startsWith("AI-Native")) {
+      const strengths = line.split("·").map(s => s.trim());
+
+      blocks.push({
+        type: "core-strengths",
+        strengths: strengths.map(s => {
+          const match = s.match(/^(.+?)\s*\((.+?)\)/);
+          if (match) {
+            return {
+              keyword: match[1].trim(),
+              metric: match[2].trim()
+            };
+          }
+          return { keyword: s, metric: "" };
+        })
+      });
+
+      currentSection = null;
+      i++;
+      continue;
+    }
+
+    // Skills content
+    if (currentSection === "skills" && line && !line.startsWith("#")) {
+      blocks.push({
+        type: "skills-cloud",
+        text: line
+      });
+      currentSection = null;
       i++;
       continue;
     }
@@ -185,6 +231,17 @@ function measureBlocks(blocks, baseFontSize, contentW, lhMult = LH_DEFAULT, sect
       h += separatorSpacing + 1 + separatorSpacing;
       continue;
     }
+    if (block.type === "core-strengths") {
+      h += 32 + 16; // padding + margin (approximate height)
+      continue;
+    }
+    if (block.type === "skills-cloud") {
+      // Approximate height for skills text (2 lines)
+      const fs = baseFontSize;
+      const lh = fs * lhMult;
+      h += lh * 2 + 24; // 2 lines + margins
+      continue;
+    }
     const fs = baseFontSize * block.fontScale;
     const lh = fs * lhMult;
     const font = fontString(baseFontSize, block);
@@ -213,6 +270,30 @@ function layoutBlocks(blocks, baseFontSize, contentW, pad, lhMult = LH_DEFAULT, 
       y += separatorSpacing;
       positioned.push({ type: "hr", y });
       y += 1 + separatorSpacing;
+      continue;
+    }
+
+    if (block.type === "core-strengths") {
+      positioned.push({
+        type: "core-strengths",
+        strengths: block.strengths,
+        y,
+        height: 48 // Approximate height
+      });
+      y += 32 + 16 + 12; // padding + margin + spacing
+      continue;
+    }
+
+    if (block.type === "skills-cloud") {
+      positioned.push({
+        type: "skills-cloud",
+        text: block.text,
+        y,
+        height: 48 // Approximate height
+      });
+      const fs = baseFontSize;
+      const lh = fs * lhMult;
+      y += lh * 2 + 24; // 2 lines + margins
       continue;
     }
 
@@ -341,6 +422,43 @@ function Resume({ markdown, config = {} }) {
             />
           );
         }
+
+        if (item.type === "core-strengths") {
+          return (
+            <div
+              key={i}
+              className="core-strengths-card"
+              style={{
+                position: "absolute",
+                top: item.y,
+              }}
+            >
+              {item.strengths.map((s, j) => (
+                <span key={j}>
+                  {s.keyword}
+                  {s.metric && <span style={{ color: "#C05621" }}> ({s.metric})</span>}
+                  {j < item.strengths.length - 1 && " · "}
+                </span>
+              ))}
+            </div>
+          );
+        }
+
+        if (item.type === "skills-cloud") {
+          return (
+            <div
+              key={i}
+              className="skills-cloud"
+              style={{
+                position: "absolute",
+                top: item.y,
+              }}
+            >
+              {item.text}
+            </div>
+          );
+        }
+
         return (
           <div
             key={i}

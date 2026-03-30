@@ -76,3 +76,36 @@ ul li {
   margin-bottom: 12px;
   line-height: inherit;
 }
+
+/* 核心优势卡片样式 */
+.core-strengths-card {
+  position: absolute;
+  left: 40px;
+  right: 40px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background-color: #EDF2F7;
+  border-left: 3px solid #1A365D;
+  font-size: 0.95em;
+  font-weight: 600;
+  color: #1A365D;
+  line-height: 1.6;
+}
+
+.core-strengths-card span {
+  display: inline;
+}
+
+/* 技能标签云样式 */
+.skills-cloud {
+  position: absolute;
+  left: 40px;
+  right: 40px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  font-size: 1em;
+  font-weight: 400;
+  color: #2D3748;
+  line-height: 1.6;
+}
