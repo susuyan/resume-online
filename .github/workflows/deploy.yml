@@ -63,46 +63,89 @@ jobs:
           cd build
           node build-pdf.js
 
-      # 6️⃣ PDF → HTML（保留 pdf2htmlEX）
-      - name: Convert PDF to HTML
+      # 6️⃣ 创建 PDF 查看页面（替代 pdf2htmlEX 转换）
+      - name: Create PDF viewer page
         run: |
-          # 创建自定义 Dockerfile 安装中文字体
-          cat > Dockerfile.pdf2html << 'EOF'
-          FROM pdf2htmlex/pdf2htmlex:0.18.8.rc2-master-20200820-ubuntu-20.04-x86_64
-          RUN apt-get update && apt-get install -y fonts-noto-cjk fonts-wqy-zenhei && apt-get clean
+          # 创建简单的 HTML 页面，使用 PDF.js 嵌入显示 PDF
+          cat > index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="zh-CN">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>余胜民 - 简历</title>
+            <style>
+              * { margin: 0; padding: 0; box-sizing: border-box; }
+              body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                background: #f5f5f5;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+              }
+              .container {
+                max-width: 800px;
+                width: 100%;
+                text-align: center;
+              }
+              h1 {
+                color: #1A365D;
+                margin-bottom: 10px;
+                font-size: 24px;
+              }
+              .download-btn {
+                display: inline-block;
+                margin: 20px 0;
+                padding: 12px 30px;
+                background: #1A365D;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+                font-weight: 500;
+                transition: background 0.3s;
+              }
+              .download-btn:hover {
+                background: #2C5282;
+              }
+              .pdf-viewer {
+                width: 100%;
+                height: 800px;
+                border: none;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                background: white;
+              }
+              .fallback {
+                margin-top: 20px;
+                padding: 20px;
+                background: #EDF2F7;
+                border-radius: 5px;
+                color: #2D3748;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <h1>余胜民 - 全栈软件交付工程师</h1>
+              <a href="resume.pdf" class="download-btn" download>下载 PDF 简历</a>
+              <object class="pdf-viewer" data="resume.pdf" type="application/pdf">
+                <div class="fallback">
+                  <p>您的浏览器不支持 PDF 预览。</p>
+                  <p>请<a href="resume.pdf">点击这里下载 PDF 文件</a>。</p>
+                </div>
+              </object>
+            </div>
+          </body>
+          </html>
           EOF
-
-          # 构建自定义镜像
-          docker build -t pdf2htmlex-with-cjk -f Dockerfile.pdf2html .
-
-          # 使用自定义镜像转换 PDF
-          docker run --rm \
-            -v "$PWD":/pdf \
-            -w /pdf \
-            pdf2htmlex-with-cjk \
-            --zoom 1.5 \
-            --process-outline 0 \
-            resume.pdf
-
-          mv resume.html index.html
-
-          # 添加自定义 CSS 解决重影问题：隐藏备用字体类
-          cat > fix-overlay.css << 'EOF'
-          /* 隐藏所有备用字体类，只保留主字体渲染 */
-          .ff0, .ff1, .ff2, .ff3 { display: none !important; }
-          /* 确保 ff4（主字体）正常显示 */
-          .ff4 { display: inline !important; }
-          EOF
-
-          # 在 HTML 中注入修复 CSS
-          sed -i '/<\/head>/i <link rel="stylesheet" href="fix-overlay.css">/' index.html
 
       # 7️⃣ 准备 Pages 产物
       - name: Prepare site
         run: |
           mkdir site
           mv index.html site/
-          mv fix-overlay.css site/
           mv resume.pdf site/
           [ -f CNAME ] && mv CNAME site/ || true
 
