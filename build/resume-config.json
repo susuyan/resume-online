@@ -9,8 +9,8 @@
     "headerBg": "#EDF2F7"
   },
   "fonts": {
-    "primary": "'Noto Sans SC', 'Source Han Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif",
-    "fallback": "system-ui, -apple-system, sans-serif"
+    "primary": "'Noto Sans SC', sans-serif",
+    "fallback": "sans-serif"
   },
   "layout": {
     "pageWidth": 620,

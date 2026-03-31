@@ -70,18 +70,22 @@ async function buildResumePDF() {
 
     console.log('生成 PDF...');
 
-    // 生成 PDF
+    // 生成 PDF（优化配置）
     const pdfPath = path.join(__dirname, '..', 'resume.pdf');
     await page.pdf({
       path: pdfPath,
       format: 'A4',
       printBackground: true,
+      preferCSSPageSize: false, // 使用 format 指定的尺寸
       margin: {
         top: '0mm',
         right: '0mm',
         bottom: '0mm',
         left: '0mm'
-      }
+      },
+      scale: 1, // 确保无缩放
+      displayHeaderFooter: false,
+      omitBackground: false
     });
 
     // 验证 PDF 生成
