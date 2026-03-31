@@ -82,7 +82,6 @@ jobs:
             pdf2htmlex-with-cjk \
             --zoom 1.5 \
             --process-outline 0 \
-            --embed-fonts 1 \
             resume.pdf
 
           mv resume.html index.html
