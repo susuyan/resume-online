@@ -2,47 +2,49 @@
 全栈软件交付工程师
 17600512027 · susuyan@163.com · 微信: susuyan_dream · github.com/susuyan
 
-I build end-to-end systems with AI-powered development workflows. Spent the last year making Claude Code and Cursor write 40% of my code, then telling clients it was my plan all along. Most productive when turning ambiguous requirements into shipped products.
+专注于端到端系统交付，使用 AI 驱动的开发工作流。过去一年让 Claude Code 和 Cursor 写了 40% 的代码，然后告诉客户这本来就是计划的一部分。最擅长把模糊的需求变成可交付的产品。
 
 ---
 
-## 核心优势
-
-AI-Native (效率提升40%) · Full-Cycle (交付缩短30%) · High-Performance (10K+/秒) · Business Impact (500+门店)
-
----
-
-## 精选项目
+## PROJECT
 
 ### PICO VR 数据采集平台
 **全栈交付顾问** · 2025.11 ~ Present
 
-- Architected cross-platform VR data collection system (Unity/C#/Node.js/React/Flutter)
-- Engineered high-concurrency service processing 10,000+ sensor records per second
-- Integrated PICO VR SDK for spatial tracking, improving data accuracy by 35%
-- Delivered end-to-end solution, reducing project timeline by 30%
+- 设计并交付跨平台 VR 数据采集系统（Unity/C#/Node.js/React/Flutter）
+- 实现高并发数据处理服务，吞吐量达 10,000+ 条传感器数据/秒
+- 集成 PICO VR SDK 实现空间定位追踪，数据采集精度提升 35%
+- 提供端到端解决方案，项目周期缩短 30%
 
 ---
 
-### 代驾计价平台
-**创始人 & 全栈工程师** · 2019.12 ~ 2021.03
-
-- Delivered full-platform product (iOS/Backend/Payment) from concept to App Store launch
-- Integrated Gaode Maps SDK, achieving 99.5% location accuracy for 10,000+ drivers
-- Implemented iFlytek voice SDK for hands-free operation, improving efficiency by 50%
-- Built multi-channel payment system (Alipay/WeChat/UnionPay), processing 5M+ monthly
-
----
-
-## 工作经历
+## EXPERIENCE
 
 ### 软件交付工程师 — 深圳海伦司企业管理有限公司
 2021.04 ~ 2025.09
 
-- Architected ERP and OA systems covering 500+ stores, improving operational efficiency by 40%
-- Designed intelligent music playback system, reducing store management costs by 60%
-- Implemented CI/CD pipeline with Docker and GitHub Actions, reducing deployment time from weekly to daily
-- Established code review and automated testing framework, reducing defect rate by 45%
+- 架构并交付覆盖 500+ 门店的 ERP 和 OA 系统，运营效率提升 40%
+- 设计智能音乐播放系统，门店管理成本降低 60%
+- 使用 Docker 和 GitHub Actions 建立 CI/CD 流程，部署频率从每周提升到每日
+- 建立代码评审和自动化测试体系，缺陷率降低 45%
+
+
+### iOS Engineer - 北京鱼乐贝贝教育科技有限公司
+2016.12 ～ 2021.12 
+
+国内最大的婴幼儿游泳馆连锁品牌，直营店和加盟店覆盖全国近两千多家。
+
+- 负责移动端团队（3-4 人）和 iOS 端的开发和维护
+- 使用 Swift 来重构了两个家长端和老师端的老项目
+- 开发子公司应用，幼儿园客户端应用
+- 开发 iPad 应用加盟宝，给加盟商使用的加盟工具，门店地图，投资计算器，数据看板图绘制
+
+###  Software Engineer 北京亿维鸿科技有限公司
+2015.7 ～ 2016.11
+
+- 负责工具类应用的开发维护和游戏应用的维护
+- 手机归属地工具和手机管家
+- 电话防骚扰，相册清理，电池管理，通讯录管理，手机垃圾清理管理
 
 ---
 
