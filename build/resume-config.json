@@ -1,0 +1,34 @@
+{
+  "colors": {
+    "primary": "#1A365D",
+    "secondary": "#2C5282",
+    "accent": "#C05621",
+    "text": "#2D3748",
+    "lightGray": "#718096",
+    "border": "#E2E8F0",
+    "headerBg": "#EDF2F7"
+  },
+  "fonts": {
+    "primary": "InterVariable, 'Latin Modern Sans', sans-serif",
+    "fallback": "system-ui, -apple-system, sans-serif"
+  },
+  "layout": {
+    "pageWidth": 620,
+    "pageHeight": 877,
+    "padding": 40,
+    "sectionSpacing": 12,
+    "itemSpacing": 6
+  },
+  "typography": {
+    "fontSizeRange": {
+      "min": 8,
+      "max": 14,
+      "default": 10
+    },
+    "lineHeightRange": {
+      "min": 1.15,
+      "max": 1.8,
+      "default": 1.5
+    }
+  }
+}
