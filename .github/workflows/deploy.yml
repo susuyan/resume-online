@@ -86,11 +86,23 @@ jobs:
 
           mv resume.html index.html
 
+          # 添加自定义 CSS 解决重影问题：隐藏备用字体类
+          cat > fix-overlay.css << 'EOF'
+          /* 隐藏所有备用字体类，只保留主字体渲染 */
+          .ff0, .ff1, .ff2, .ff3 { display: none !important; }
+          /* 确保 ff4（主字体）正常显示 */
+          .ff4 { display: inline !important; }
+          EOF
+
+          # 在 HTML 中注入修复 CSS
+          sed -i '/<\/head>/i <link rel="stylesheet" href="fix-overlay.css">/' index.html
+
       # 7️⃣ 准备 Pages 产物
       - name: Prepare site
         run: |
           mkdir site
           mv index.html site/
+          mv fix-overlay.css site/
           mv resume.pdf site/
           [ -f CNAME ] && mv CNAME site/ || true
 
