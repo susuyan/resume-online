@@ -59,12 +59,23 @@ jobs:
       # 6️⃣ PDF → HTML（保留 pdf2htmlEX）
       - name: Convert PDF to HTML
         run: |
+          # 创建自定义 Dockerfile 安装中文字体
+          cat > Dockerfile.pdf2html << 'EOF'
+          FROM pdf2htmlex/pdf2htmlex:0.18.8.rc2-master-20200820-ubuntu-20.04-x86_64
+          RUN apt-get update && apt-get install -y fonts-noto-cjk fonts-wqy-zenhei && apt-get clean
+          EOF
+
+          # 构建自定义镜像
+          docker build -t pdf2htmlex-with-cjk -f Dockerfile.pdf2html .
+
+          # 使用自定义镜像转换 PDF
           docker run --rm \
             -v "$PWD":/pdf \
             -w /pdf \
-            pdf2htmlex/pdf2htmlex:0.18.8.rc2-master-20200820-ubuntu-20.04-x86_64 \
+            pdf2htmlex-with-cjk \
             --zoom 1.5 \
             --process-outline 0 \
+            --embed-fonts 1 \
             resume.pdf
 
           mv resume.html index.html

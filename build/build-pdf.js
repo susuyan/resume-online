@@ -48,7 +48,17 @@ async function buildResumePDF() {
     const htmlPath = path.join(__dirname, 'index.html');
     await page.goto(`file://${htmlPath}`, {
       waitUntil: 'networkidle0',
-      timeout: 15000
+      timeout: 30000
+    });
+
+    console.log('等待字体加载...');
+
+    // 等待 Google Fonts 加载完成
+    await page.waitForFunction(() => {
+      return document.fonts.check('400px "Noto Sans SC"') &&
+             document.fonts.check('700px "Noto Sans SC"');
+    }, {
+      timeout: 30000
     });
 
     console.log('注入简历内容...');

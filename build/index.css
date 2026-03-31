@@ -8,7 +8,7 @@
   --color-light-gray: #718096;
   --color-border: #E2E8F0;
   --color-header-bg: #EDF2F7;
-  --font-primary: InterVariable, 'Latin Modern Sans', sans-serif;
+  --font-primary: 'Noto Sans SC', 'Source Han Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif;
 }
 
 .resume-container {

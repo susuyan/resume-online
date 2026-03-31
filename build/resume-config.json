@@ -9,7 +9,7 @@
     "headerBg": "#EDF2F7"
   },
   "fonts": {
-    "primary": "InterVariable, 'Latin Modern Sans', sans-serif",
+    "primary": "'Noto Sans SC', 'Source Han Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif",
     "fallback": "system-ui, -apple-system, sans-serif"
   },
   "layout": {
