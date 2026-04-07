@@ -1,0 +1,350 @@
+#!/usr/bin/env node
+
+/**
+ * 简历构建测试脚本（主逻辑）
+ * 测试流程: resume.md → resume.pdf → index.html
+ */
+
+const path = require('path');
+const fs = require('fs');
+const { execSync } = require('child_process');
+
+// 加载 puppeteer（NODE_PATH 已设置为 build/node_modules）
+const puppeteer = require('puppeteer');
+
+// build 目录
+const buildDir = path.join(__dirname, '..', 'build');
+
+// 测试配置（工作目录是 build）
+const CONFIG = {
+  resumeMd: path.join(buildDir, '..', 'resume.md'),
+  resumeConfig: path.join(buildDir, '..', 'resume-config.json'),
+  buildDir: buildDir,
+  outputPdf: path.join(buildDir, '..', 'resume.pdf'),
+  outputHtml: path.join(buildDir, '..', 'index.html'),
+  testTimeout: 60000
+};
+
+// 颜色输出
+const colors = {
+  green: '\x1b[32m',
+  red: '\x1b[31m',
+  yellow: '\x1b[33m',
+  blue: '\x1b[34m',
+  reset: '\x1b[0m'
+};
+
+function log(color, message) {
+  console.log(`${colors[color]}${message}${colors.reset}`);
+}
+
+// 验证输入文件
+function validateInputs() {
+  log('blue', '\n=== 步骤 1: 验证输入文件 ===');
+
+  if (!fs.existsSync(CONFIG.resumeMd)) {
+    throw new Error('❌ resume.md 文件不存在');
+  }
+  log('green', '✓ resume.md 文件存在');
+
+  if (!fs.existsSync(CONFIG.resumeConfig)) {
+    throw new Error('❌ resume-config.json 文件不存在');
+  }
+  log('green', '✓ resume-config.json 文件存在');
+
+  // 验证 JSON 格式
+  try {
+    const config = JSON.parse(fs.readFileSync(CONFIG.resumeConfig, 'utf-8'));
+    log('green', '✓ resume-config.json 格式正确');
+    log('blue', `  页面尺寸: ${config.layout.pageWidth}x${config.layout.pageHeight}px`);
+  } catch (error) {
+    throw new Error('❌ resume-config.json 格式错误: ' + error.message);
+  }
+}
+
+// 构建 Vite 应用
+function buildVite() {
+  log('blue', '\n=== 步骤 2: 构建 React 应用 ===');
+
+  try {
+    // 在 build 目录运行 bun
+    execSync('bun run build:vite', {
+      cwd: CONFIG.buildDir,
+      stdio: 'inherit',
+      timeout: CONFIG.testTimeout
+    });
+    log('green', '✓ Vite 构建成功');
+  } catch (error) {
+    throw new Error('❌ Vite 构建失败: ' + error.message);
+  }
+}
+
+// 生成 PDF
+async function generatePDF() {
+  log('blue', '\n=== 步骤 3: 生成 PDF ===');
+
+  let browser;
+  try {
+    // 读取简历内容
+    const resumeMarkdown = fs.readFileSync(CONFIG.resumeMd, 'utf-8');
+    const resumeConfig = JSON.parse(fs.readFileSync(CONFIG.resumeConfig, 'utf-8'));
+
+    log('yellow', '启动 Puppeteer...');
+
+    // 启动浏览器
+    browser = await puppeteer.launch({
+      headless: true,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage'
+      ],
+      timeout: 30000
+    });
+
+    const page = await browser.newPage();
+
+    // 设置页面大小
+    await page.setViewport({
+      width: resumeConfig.layout.pageWidth + 80,
+      height: resumeConfig.layout.pageHeight + 80,
+      deviceScaleFactor: 1
+    });
+
+    // 加载 HTML 模板（当前工作目录是 build）
+    const htmlPath = path.join(CONFIG.buildDir, 'index.html');
+    await page.goto(`file://${htmlPath}`, {
+      waitUntil: 'networkidle0',
+      timeout: 30000
+    });
+
+    log('yellow', '注入简历内容...');
+
+    // 等待 renderResume 函数可用
+    await page.waitForFunction(() => typeof window.renderResume === 'function', {
+      timeout: 15000
+    });
+
+    // 监听控制台输出
+    page.on('console', msg => {
+      const text = msg.text();
+      if (text.includes('===') || text.includes('页面尺寸') || text.includes('内容区域') ||
+          text.includes('最佳字体大小') || text.includes('行高倍数') || text.includes('内容块数量')) {
+        console.log('  ' + text);
+      }
+    });
+
+    // 注入简历内容和配置
+    await page.evaluate((markdown, config) => {
+      window.renderResume(markdown, config);
+    }, resumeMarkdown, resumeConfig);
+
+    // 等待渲染完成
+    await page.waitForFunction(() => window.resumeRendered === true, {
+      timeout: 15000
+    });
+
+    log('yellow', '生成 PDF 文件...');
+
+    // 生成 PDF
+    await page.pdf({
+      path: CONFIG.outputPdf,
+      format: 'A4',
+      printBackground: true,
+      preferCSSPageSize: false,
+      margin: {
+        top: '0mm',
+        right: '0mm',
+        bottom: '0mm',
+        left: '0mm'
+      },
+      scale: 1,
+      displayHeaderFooter: false,
+      omitBackground: false
+    });
+
+    await browser.close();
+
+    // 验证 PDF
+    if (!fs.existsSync(CONFIG.outputPdf)) {
+      throw new Error('❌ PDF 文件未生成');
+    }
+
+    const pdfSize = fs.statSync(CONFIG.outputPdf).size;
+    log('green', `✓ PDF 生成成功: ${pdfSize} bytes (${(pdfSize / 1024).toFixed(2)} KB)`);
+    log('blue', `  输出路径: ${CONFIG.outputPdf}`);
+
+  } catch (error) {
+    if (browser) {
+      await browser.close();
+    }
+    throw new Error('❌ PDF 生成失败: ' + error.message);
+  }
+}
+
+// 检查 pdf2htmlEX 是否可用
+function checkPdf2htmlEX() {
+  log('blue', '\n=== 步骤 4: 检查 pdf2htmlEX ===');
+
+  try {
+    // 检查 Docker 是否安装
+    execSync('docker --version', { stdio: 'pipe' });
+    log('green', '✓ Docker 已安装');
+
+    // 检查 pdf2htmlEX 镜像
+    try {
+      execSync('docker images pdf2htmlex/pdf2htmlex:0.18.8.rc2-master-20200820-ubuntu-20.04-x86_64', {
+        stdio: 'pipe'
+      });
+      log('green', '✓ pdf2htmlEX 镜像已存在');
+    } catch {
+      log('yellow', '⚠ pdf2htmlEX 镜像未安装，需要拉取镜像');
+      log('yellow', '  运行: docker pull pdf2htmlex/pdf2htmlex:0.18.8.rc2-master-20200820-ubuntu-20.04-x86_64');
+    }
+
+    return true;
+  } catch (error) {
+    log('yellow', '⚠ Docker 未安装，跳过 PDF 转 HTML 测试');
+    log('yellow', '  安装 Docker: https://docs.docker.com/get-docker/');
+    return false;
+  }
+}
+
+// PDF 转 HTML
+function convertToHtml() {
+  log('blue', '\n=== 步骤 5: PDF 转 HTML ===');
+
+  if (!fs.existsSync(CONFIG.outputPdf)) {
+    throw new Error('❌ PDF 文件不存在，无法转换');
+  }
+
+  try {
+    const pwd = path.join(__dirname, '..');
+
+    // 构建 Docker 镜像（带中文字体）
+    log('yellow', '构建 Docker 镜像（带中文字体支持）...');
+
+    const dockerfile = `
+FROM pdf2htmlex/pdf2htmlex:0.18.8.rc2-master-20200820-ubuntu-20.04-x86_64
+RUN apt-get update && apt-get install -y fonts-noto-cjk fonts-wqy-zenhei && apt-get clean
+`;
+
+    fs.writeFileSync(path.join(pwd, 'Dockerfile.test'), dockerfile);
+
+    execSync('docker build -t pdf2htmlex-test -f Dockerfile.test .', {
+      cwd: pwd,
+      stdio: 'inherit',
+      timeout: CONFIG.testTimeout
+    });
+
+    log('green', '✓ Docker 镜像构建成功');
+
+    // 转换 PDF
+    log('yellow', '转换 PDF 为 HTML...');
+
+    execSync(`docker run --rm -v "${pwd}":/pdf -w /pdf pdf2htmlex-test \
+      --zoom 1.5 \
+      --process-outline 0 \
+      --embed-font 1 \
+      --font-size-multiplier 1 \
+      --correct-text-visibility 1 \
+      resume.pdf`, {
+      cwd: pwd,
+      stdio: 'inherit',
+      timeout: CONFIG.testTimeout
+    });
+
+    // 重命名输出文件
+    const generatedHtml = path.join(pwd, 'resume.html');
+    if (fs.existsSync(generatedHtml)) {
+      fs.renameSync(generatedHtml, CONFIG.outputHtml);
+    }
+
+    // 清理临时文件
+    fs.unlinkSync(path.join(pwd, 'Dockerfile.test'));
+
+    // 验证 HTML
+    if (!fs.existsSync(CONFIG.outputHtml)) {
+      throw new Error('❌ HTML 文件未生成');
+    }
+
+    const htmlSize = fs.statSync(CONFIG.outputHtml).size;
+    log('green', `✓ HTML 生成成功: ${htmlSize} bytes (${(htmlSize / 1024).toFixed(2)} KB)`);
+    log('blue', `  输出路径: ${CONFIG.outputHtml}`);
+
+  } catch (error) {
+    throw new Error('❌ PDF 转 HTML 失败: ' + error.message);
+  }
+}
+
+// 验证最终产物
+function validateOutputs() {
+  log('blue', '\n=== 步骤 6: 验证产物 ===');
+
+  const outputs = [
+    { name: 'PDF', path: CONFIG.outputPdf },
+    { name: 'HTML', path: CONFIG.outputHtml }
+  ];
+
+  outputs.forEach(output => {
+    if (fs.existsSync(output.path)) {
+      const size = fs.statSync(output.path).size;
+      log('green', `✓ ${output.name} 文件存在 (${(size / 1024).toFixed(2)} KB)`);
+    } else {
+      log('yellow', `⚠ ${output.name} 文件不存在`);
+    }
+  });
+}
+
+// 主测试流程
+async function main() {
+  log('blue', '\n========================================');
+  log('blue', '  简历构建测试流程');
+  log('blue', '========================================');
+
+  const startTime = Date.now();
+
+  try {
+    // 步骤 1: 验证输入
+    validateInputs();
+
+    // 步骤 2: 构建应用
+    buildVite();
+
+    // 步骤 3: 生成 PDF
+    await generatePDF();
+
+    // 步骤 4: 检查 pdf2htmlEX
+    const hasPdf2html = checkPdf2htmlEX();
+
+    // 步骤 5: PDF 转 HTML (可选)
+    if (hasPdf2html && process.argv.includes('--full')) {
+      convertToHtml();
+    } else if (!hasPdf2html) {
+      log('yellow', '\n提示: 使用 --full 参数运行完整测试（包括 PDF 转 HTML）');
+    }
+
+    // 步骤 6: 验证产物
+    validateOutputs();
+
+    const duration = ((Date.now() - startTime) / 1000).toFixed(2);
+
+    log('green', '\n========================================');
+    log('green', `  ✓ 测试完成 (${duration}s)`);
+    log('green', '========================================\n');
+
+    log('blue', '下一步:');
+    log('blue', '  - 运行预览服务器: node tests/preview-server.js');
+    log('blue', '  - 访问: http://localhost:3000');
+
+  } catch (error) {
+    log('red', '\n========================================');
+    log('red', '  ❌ 测试失败');
+    log('red', '========================================\n');
+    log('red', error.message);
+    process.exit(1);
+  }
+}
+
+// 运行测试
+main();

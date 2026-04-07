@@ -37,10 +37,10 @@ async function buildResumePDF() {
 
     const page = await browser.newPage();
 
-    // 设置页面大小
+    // 设置页面大小（标准 A4 尺寸）
     await page.setViewport({
-      width: 620 + 80,
-      height: 877 + 80,
+      width: 794,
+      height: 1122,
       deviceScaleFactor: 1
     });
 
@@ -76,14 +76,14 @@ async function buildResumePDF() {
       path: pdfPath,
       format: 'A4',
       printBackground: true,
-      preferCSSPageSize: false, // 使用 format 指定的尺寸
+      preferCSSPageSize: true, // 使用 CSS 定义的页面尺寸（由 @chenglou/pretext 控制）
       margin: {
         top: '0mm',
         right: '0mm',
         bottom: '0mm',
         left: '0mm'
       },
-      scale: 1, // 确保无缩放
+      scale: 1,
       displayHeaderFooter: false,
       omitBackground: false
     });

@@ -1,0 +1,23 @@
+# Bun 配置文件
+# https://bun.sh/docs/runtime/bunfig
+
+# 安装配置
+[install]
+# 使用精确版本
+exact = true
+
+# 生产环境不安装 devDependencies
+production = false
+
+# 自动安装 peer dependencies
+peer = true
+
+# 运行配置
+[run]
+# 静默模式（减少输出）
+silent = false
+
+# 构建配置
+[build]
+# 目标环境
+target = "browser"

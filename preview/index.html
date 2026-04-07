@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>简历排版系统 - @chenglou/pretext</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #f1f5f9;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --text-tertiary: #94a3b8;
+      --border-color: #e2e8f0;
+      --accent-color: #3b82f6;
+      --accent-hover: #2563eb;
+      --success-color: #10b981;
+      --error-color: #ef4444;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .app {
+      display: flex;
+      height: 100vh;
+    }
+
+    /* 左侧编辑器面板 */
+    .editor-panel {
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      min-width: 300px;
+      max-width: 800px;
+    }
+
+    .panel-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-secondary);
+    }
+
+    .panel-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #markdown-editor {
+      flex: 1;
+      padding: 20px;
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-primary);
+      background: var(--bg-secondary);
+      border: none;
+      resize: none;
+      outline: none;
+    }
+
+    #markdown-editor::placeholder {
+      color: var(--text-tertiary);
+    }
+
+    /* 拖拽分隔条 */
+    .resizer {
+      width: 6px;
+      background: var(--border-color);
+      cursor: col-resize;
+      position: relative;
+      z-index: 20;
+      transition: background 0.2s;
+    }
+
+    .resizer:hover,
+    .resizer.resizing {
+      background: var(--accent-color);
+    }
+
+    .resizer::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 2px;
+      height: 40px;
+      background: var(--text-tertiary);
+      border-radius: 1px;
+      opacity: 0.5;
+    }
+
+    .resizer:hover::after,
+    .resizer.resizing::after {
+      background: white;
+      opacity: 1;
+    }
+
+    /* 中间预览区域 */
+    .preview-panel {
+      flex: 1;
+      background: var(--bg-tertiary);
+      display: flex;
+      flex-direction: column;
+      min-width: 400px;
+    }
+
+    .preview-header {
+      padding: 16px 20px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .preview-stats {
+      display: flex;
+      gap: 24px;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-family: 'SF Mono', monospace;
+    }
+
+    .preview-content {
+      flex: 1;
+      padding: 40px;
+      overflow: auto;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    #resume-container {
+      background: white;
+      box-shadow: var(--shadow-lg);
+      transform-origin: top center;
+      position: relative;
+    }
+
+    #root {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* 按钮样式 */
+    .btn {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    .btn:hover {
+      background: var(--border-color);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    /* 右侧配置面板 */
+    .config-panel {
+      background: var(--bg-secondary);
+      border-left: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      min-width: 280px;
+      max-width: 500px;
+      overflow-y: auto;
+    }
+
+    .config-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+    }
+
+    .config-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .config-section {
+      padding: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .config-section:last-child {
+      border-bottom: none;
+    }
+
+    .config-section-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+    }
+
+    .config-item {
+      margin-bottom: 20px;
+    }
+
+    .config-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .config-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: var(--text-primary);
+    }
+
+    .config-value {
+      font-family: 'SF Mono', monospace;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent-color);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--bg-tertiary);
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.1);
+      background: var(--accent-hover);
+    }
+
+    input[type="color"] {
+      width: 100%;
+      height: 36px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      cursor: pointer;
+      background: var(--bg-secondary);
+      padding: 4px;
+    }
+
+    input[type="color"]::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    input[type="color"]::-webkit-color-swatch {
+      border-radius: 4px;
+      border: none;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text-primary);
+    }
+
+    .checkbox-label input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      cursor: pointer;
+      accent-color: var(--accent-color);
+    }
+
+    /* 页面填充进度条 */
+    .fit-indicator {
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .fit-progress-bar {
+      height: 8px;
+      background: var(--border-color);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .fit-progress-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .fit-progress-fill.fits {
+      background: linear-gradient(90deg, var(--success-color), #059669);
+    }
+
+    .fit-progress-fill.overflow {
+      background: linear-gradient(90deg, var(--error-color), #dc2626);
+    }
+
+    .fit-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .fit-status {
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .fit-status.fits {
+      color: var(--success-color);
+    }
+
+    .fit-status.overflow {
+      color: var(--error-color);
+    }
+
+    .fit-detail {
+      font-size: 12px;
+      font-family: 'SF Mono', monospace;
+      color: var(--text-tertiary);
+    }
+
+    /* 滚动条样式 */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-tertiary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-tertiary);
+    }
+
+    /* 响应式 */
+    @media (max-width: 1200px) {
+      .config-panel {
+        min-width: 250px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .editor-panel {
+        min-width: 200px;
+      }
+      .preview-panel {
+        min-width: 200px;
+      }
+      .config-panel {
+        min-width: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- 左侧：Markdown 编辑器 -->
+    <div class="editor-panel" id="editor-panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          📝 Markdown
+        </div>
+      </div>
+      <textarea id="markdown-editor" placeholder="在此输入简历内容...
+
+# 姓名
+职位
+联系方式
+
+---
+
+个人简介
+
+## 工作经历
+
+### 职位 — 公司
+时间
+- 成就 1
+- 成就 2
+"></textarea>
+    </div>
+
+    <!-- 拖拽分隔条 1 -->
+    <div class="resizer" id="resizer1"></div>
+
+    <!-- 中间：预览区域 -->
+    <div class="preview-panel">
+      <div class="preview-header">
+        <div class="panel-title">
+          👁️ 实时预览
+        </div>
+        <div class="preview-stats">
+          <div class="stat-item">
+            <div class="stat-label">字号</div>
+            <div class="stat-value" id="font-size-info">--</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">行高</div>
+            <div class="stat-value" id="line-height-info">--</div>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="exportPDF()">📄 导出 PDF</button>
+      </div>
+      <div class="preview-content" id="preview-container">
+        <div id="resume-container">
+          <div id="root"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 拖拽分隔条 2 -->
+    <div class="resizer" id="resizer2"></div>
+
+    <!-- 右侧：配置面板 -->
+    <div class="config-panel" id="config-panel">
+      <div class="config-header">
+        <div class="config-title">⚙️ 排版设置</div>
+      </div>
+
+      <!-- 自动适配 -->
+      <div class="config-section">
+        <div class="config-section-title">自动排版</div>
+        <div class="config-item">
+          <label class="checkbox-label">
+            <input type="checkbox" id="auto-fit" checked onchange="toggleAutoFit()">
+            自动调整字号和行高
+          </label>
+        </div>
+      </div>
+
+      <!-- 字体和行高 -->
+      <div class="config-section">
+        <div class="config-section-title">字体设置</div>
+
+        <div class="config-item">
+          <div class="config-label">
+            <span>字号</span>
+            <span class="config-value" id="font-size-value">--</span>
+          </div>
+          <input type="range" id="font-size" min="8" max="24" step="0.5" oninput="updateConfig()">
+        </div>
+
+        <div class="config-item">
+          <div class="config-label">
+            <span>最大字号</span>
+            <span class="config-value" id="max-font-size-value">--</span>
+          </div>
+          <input type="range" id="max-font-size" min="12" max="28" step="1" oninput="updateConfig()">
+        </div>
+
+        <div class="config-item">
+          <div class="config-label">
+            <span>行高</span>
+            <span class="config-value" id="line-height-value">--</span>
+          </div>
+          <input type="range" id="line-height" min="1.1" max="2.0" step="0.05" oninput="updateConfig()">
+        </div>
+      </div>
+
+      <!-- 页面布局 -->
+      <div class="config-section">
+        <div class="config-section-title">页面布局</div>
+
+        <div class="config-item">
+          <div class="config-label">
+            <span>页边距</span>
+            <span class="config-value" id="padding-value">--</span>
+          </div>
+          <input type="range" id="padding" min="20" max="100" step="5" oninput="updateConfig()">
+        </div>
+
+        <div class="config-item">
+          <div class="config-label">
+            <span>章节间距</span>
+            <span class="config-value" id="section-spacing-value">--</span>
+          </div>
+          <input type="range" id="section-spacing" min="8" max="30" step="1" oninput="updateConfig()">
+        </div>
+
+        <div class="config-item">
+          <div class="config-label">
+            <span>列表间距</span>
+            <span class="config-value" id="item-spacing-value">--</span>
+          </div>
+          <input type="range" id="item-spacing" min="4" max="20" step="1" oninput="updateConfig()">
+        </div>
+
+        <div class="config-item">
+          <div class="config-label">
+            <span>分隔线间距</span>
+            <span class="config-value" id="separator-spacing-value">--</span>
+          </div>
+          <input type="range" id="separator-spacing" min="4" max="30" step="1" oninput="updateConfig()">
+        </div>
+      </div>
+
+      <!-- 颜色配置 -->
+      <div class="config-section">
+        <div class="config-section-title">颜色主题</div>
+
+        <div class="config-item">
+          <div class="config-label">
+            <span>主色调</span>
+          </div>
+          <input type="color" id="color-primary" value="#1A365D" onchange="updateConfig()">
+        </div>
+
+        <div class="config-item">
+          <div class="config-label">
+            <span>次要色调</span>
+          </div>
+          <input type="color" id="color-secondary" value="#2C5282" onchange="updateConfig()">
+        </div>
+
+        <div class="config-item">
+          <div class="config-label">
+            <span>强调色</span>
+          </div>
+          <input type="color" id="color-accent" value="#C05621" onchange="updateConfig()">
+        </div>
+
+        <div class="config-item">
+          <div class="config-label">
+            <span>正文颜色</span>
+          </div>
+          <input type="color" id="color-text" value="#2D3748" onchange="updateConfig()">
+        </div>
+      </div>
+
+      <!-- 页面填充 -->
+      <div class="config-section">
+        <div class="config-section-title">页面填充</div>
+        <div class="fit-indicator">
+          <div class="fit-progress-bar">
+            <div class="fit-progress-fill" id="progress-fill"></div>
+          </div>
+          <div class="fit-info">
+            <div class="fit-status" id="fit-status">加载中...</div>
+            <div class="fit-detail" id="fit-detail">--/--</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 加载 renderer.bundle.js -->
+  <script src="../build/dist/renderer.bundle.js"></script>
+  <script>
+    // 配置状态
+    const PAGE_W = 794;
+    const PAGE_H = 1122;
+    const DEFAULT_PAD = 50;
+
+    let currentConfig = {
+      layout: {
+        pageWidth: PAGE_W,
+        pageHeight: PAGE_H,
+        padding: DEFAULT_PAD,
+        sectionSpacing: 18,
+        itemSpacing: 10,
+        separatorSpacing: 16
+      },
+      typography: {
+        fontSize: 11,
+        maxFontSize: 18,
+        lineHeight: 1.5,
+        fontSizeRange: { min: 10, max: 18 },
+        lineHeightRange: { min: 1.3, max: 1.9 }
+      },
+      colors: {
+        primary: '#1A365D',
+        secondary: '#2C5282',
+        accent: '#C05621',
+        text: '#2D3748'
+      }
+    };
+
+    let autoFit = true;
+    let debounceTimer = null;
+
+    // 拖拽调整宽度
+    const editorPanel = document.getElementById('editor-panel');
+    const configPanel = document.getElementById('config-panel');
+    const resizer1 = document.getElementById('resizer1');
+    const resizer2 = document.getElementById('resizer2');
+
+    let isResizing1 = false;
+    let isResizing2 = false;
+
+    // 编辑器和预览之间的分隔条
+    resizer1.addEventListener('mousedown', (e) => {
+      isResizing1 = true;
+      resizer1.classList.add('resizing');
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+    });
+
+    // 预览和配置面板之间的分隔条
+    resizer2.addEventListener('mousedown', (e) => {
+      isResizing2 = true;
+      resizer2.classList.add('resizing');
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      const containerRect = document.querySelector('.app').getBoundingClientRect();
+
+      if (isResizing1) {
+        const newWidth = e.clientX - containerRect.left;
+
+        const minWidth = 300;
+        const maxWidth = containerRect.width - 400 - 280 - 12;
+
+        if (newWidth >= minWidth && newWidth <= maxWidth) {
+          editorPanel.style.width = newWidth + 'px';
+        }
+      }
+
+      if (isResizing2) {
+        const configRight = containerRect.width - (e.clientX - containerRect.left);
+
+        const minWidth = 280;
+        const maxWidth = containerRect.width - 300 - 400 - 12;
+
+        if (configRight >= minWidth && configRight <= maxWidth) {
+          configPanel.style.width = configRight + 'px';
+        }
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (isResizing1) {
+        isResizing1 = false;
+        resizer1.classList.remove('resizing');
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+      }
+      if (isResizing2) {
+        isResizing2 = false;
+        resizer2.classList.remove('resizing');
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+      }
+    });
+
+    // 初始化
+    function init() {
+      // 设置初始宽度比例
+      const containerWidth = document.querySelector('.app').offsetWidth;
+      editorPanel.style.width = (containerWidth / 3 - 2) + 'px';
+      configPanel.style.width = (containerWidth / 3 - 2) + 'px';
+
+      updateUI();
+
+      document.fonts.ready.then(() => {
+        renderPreview();
+      });
+
+      setupResizeObserver();
+    }
+
+    function setupResizeObserver() {
+      const container = document.getElementById('preview-container');
+      const preview = document.getElementById('resume-container');
+
+      const ro = new ResizeObserver(entries => {
+        for (let entry of entries) {
+          const { width, height } = entry.contentRect;
+          const scaleX = (width - 80) / PAGE_W;
+          const scaleY = (height - 80) / PAGE_H;
+          const scale = Math.min(scaleX, scaleY, 1);
+          preview.style.transform = `scale(${scale})`;
+        }
+      });
+
+      ro.observe(container);
+    }
+
+    function updateUI() {
+      const layout = currentConfig.layout;
+      const typography = currentConfig.typography;
+      const colors = currentConfig.colors;
+
+      document.getElementById('font-size').value = typography.fontSize || 11;
+      document.getElementById('font-size-value').textContent = typography.fontSize || 11;
+
+      document.getElementById('max-font-size').value = typography.maxFontSize || 18;
+      document.getElementById('max-font-size-value').textContent = typography.maxFontSize || 18;
+
+      document.getElementById('line-height').value = typography.lineHeight || 1.5;
+      document.getElementById('line-height-value').textContent = typography.lineHeight || 1.5;
+
+      document.getElementById('padding').value = layout.padding;
+      document.getElementById('padding-value').textContent = layout.padding;
+
+      document.getElementById('section-spacing').value = layout.sectionSpacing;
+      document.getElementById('section-spacing-value').textContent = layout.sectionSpacing;
+
+      document.getElementById('item-spacing').value = layout.itemSpacing;
+      document.getElementById('item-spacing-value').textContent = layout.itemSpacing;
+
+      document.getElementById('separator-spacing').value = layout.separatorSpacing;
+      document.getElementById('separator-spacing-value').textContent = layout.separatorSpacing;
+
+      document.getElementById('color-primary').value = colors.primary;
+      document.getElementById('color-secondary').value = colors.secondary;
+      document.getElementById('color-accent').value = colors.accent;
+      document.getElementById('color-text').value = colors.text;
+
+      document.getElementById('auto-fit').checked = autoFit;
+    }
+
+    function updateConfig() {
+      currentConfig.typography.fontSize = parseFloat(document.getElementById('font-size').value);
+      currentConfig.typography.maxFontSize = parseFloat(document.getElementById('max-font-size').value);
+      currentConfig.typography.lineHeight = parseFloat(document.getElementById('line-height').value);
+
+      currentConfig.layout.padding = parseInt(document.getElementById('padding').value);
+      currentConfig.layout.sectionSpacing = parseInt(document.getElementById('section-spacing').value);
+      currentConfig.layout.itemSpacing = parseInt(document.getElementById('item-spacing').value);
+      currentConfig.layout.separatorSpacing = parseInt(document.getElementById('separator-spacing').value);
+
+      currentConfig.colors.primary = document.getElementById('color-primary').value;
+      currentConfig.colors.secondary = document.getElementById('color-secondary').value;
+      currentConfig.colors.accent = document.getElementById('color-accent').value;
+      currentConfig.colors.text = document.getElementById('color-text').value;
+
+      document.getElementById('font-size-value').textContent = currentConfig.typography.fontSize;
+      document.getElementById('max-font-size-value').textContent = currentConfig.typography.maxFontSize;
+      document.getElementById('line-height-value').textContent = currentConfig.typography.lineHeight;
+      document.getElementById('padding-value').textContent = currentConfig.layout.padding;
+      document.getElementById('section-spacing-value').textContent = currentConfig.layout.sectionSpacing;
+      document.getElementById('item-spacing-value').textContent = currentConfig.layout.itemSpacing;
+      document.getElementById('separator-spacing-value').textContent = currentConfig.layout.separatorSpacing;
+
+      renderPreview();
+    }
+
+    function renderPreview() {
+      const markdown = document.getElementById('markdown-editor').value;
+      const container = document.getElementById('resume-container');
+
+      container.style.width = PAGE_W + 'px';
+      container.style.height = PAGE_H + 'px';
+
+      if (typeof window.renderResume === 'function') {
+        window.renderResume(markdown, currentConfig);
+
+        const layoutInfo = {
+          fontSize: window.__PRETEXT_FONT_SIZE__ || 0,
+          lineHeight: window.__PRETEXT_LINE_HEIGHT__ || 0,
+          measuredHeight: window.__PRETEXT_MEASURED_HEIGHT__ || 0
+        };
+
+        const maxH = PAGE_H - currentConfig.layout.padding * 2;
+        const fits = layoutInfo.measuredHeight <= maxH;
+        const pct = Math.min((layoutInfo.measuredHeight / maxH) * 100, 100);
+
+        document.getElementById('font-size-info').textContent = layoutInfo.fontSize + 'px';
+        document.getElementById('line-height-info').textContent = layoutInfo.lineHeight;
+
+        const progressFill = document.getElementById('progress-fill');
+        progressFill.style.width = pct + '%';
+        progressFill.className = 'fit-progress-fill ' + (fits ? 'fits' : 'overflow');
+
+        const fitStatus = document.getElementById('fit-status');
+        fitStatus.textContent = fits ? '✓ 适配一页' : `⚠ 溢出 +${layoutInfo.measuredHeight - maxH}px`;
+        fitStatus.className = 'fit-status ' + (fits ? 'fits' : 'overflow');
+
+        document.getElementById('fit-detail').textContent = `${layoutInfo.measuredHeight}/${maxH} px`;
+      }
+    }
+
+    document.getElementById('markdown-editor').addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        renderPreview();
+      }, 300);
+    });
+
+    function toggleAutoFit() {
+      autoFit = document.getElementById('auto-fit').checked;
+      if (autoFit) {
+        renderPreview();
+      }
+    }
+
+    function exportPDF() {
+      const page = document.getElementById('resume-container');
+      if (!page) return;
+
+      const hiddenEls = [];
+      const ancestorSaved = [];
+      let current = page;
+
+      while (current.parentElement) {
+        const parent = current.parentElement;
+        Array.from(parent.children).forEach((sibling) => {
+          if (sibling !== current) {
+            hiddenEls.push({ el: sibling, prev: sibling.style.display });
+            sibling.style.display = 'none';
+          }
+        });
+
+        if (parent !== document.body) {
+          ancestorSaved.push({
+            el: parent,
+            overflow: parent.style.overflow,
+            transform: parent.style.transform,
+            position: parent.style.position,
+            visibility: parent.style.visibility,
+            background: parent.style.background,
+          });
+          parent.style.overflow = 'visible';
+          parent.style.transform = 'none';
+          parent.style.visibility = 'visible';
+          parent.style.background = 'none';
+        }
+        current = parent;
+      }
+
+      const pageSaved = {
+        position: page.style.position,
+        top: page.style.top,
+        left: page.style.left,
+        transform: page.style.transform,
+        transformOrigin: page.style.transformOrigin,
+        boxShadow: page.style.boxShadow,
+        background: page.style.background,
+      };
+
+      const printScale = 794 / PAGE_W;
+      page.style.position = 'fixed';
+      page.style.top = '0';
+      page.style.left = '0';
+      page.style.transform = `scale(${printScale})`;
+      page.style.transformOrigin = 'top left';
+      page.style.boxShadow = 'none';
+      page.style.background = 'white';
+
+      const style = document.createElement('style');
+      style.textContent = `
+        @page { size: A4; margin: 0; }
+        * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      `;
+      document.head.appendChild(style);
+
+      const savedTitle = document.title;
+      const nameMatch = document.getElementById('markdown-editor').value.match(/^# (.+)/m);
+      document.title = nameMatch ? `${nameMatch[1]} Resume` : 'Resume';
+
+      const restore = () => {
+        style.remove();
+        Object.assign(page.style, pageSaved);
+        ancestorSaved.forEach((s) => {
+          s.el.style.overflow = s.overflow;
+          s.el.style.transform = s.transform;
+          s.el.style.position = s.position;
+          s.el.style.visibility = s.visibility;
+          s.el.style.background = s.background;
+        });
+        hiddenEls.forEach((h) => (h.el.style.display = h.prev));
+        document.title = savedTitle;
+        window.onafterprint = null;
+      };
+
+      window.onafterprint = restore;
+      window.print();
+    }
+
+    // 初始化
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "resume-tests",
+  "version": "1.0.0",
+  "description": "Resume build test scripts",
+  "private": true,
+  "scripts": {
+    "test": "node test-build.js",
+    "test:full": "node test-build.js --full",
+    "preview": "node preview-server.js",
+    "all": "./run-tests.sh --full --preview"
+  },
+  "author": "susuyan",
+  "license": "MIT"
+}

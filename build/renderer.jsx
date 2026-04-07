@@ -340,6 +340,22 @@ function Resume({ markdown, config }) {
     [blocks, contentW, maxH]
   );
 
+  // 测量内容高度
+  const measuredHeight = React.useMemo(
+    () => measureBlocks(blocks, fontSize, contentW, lineHeightMult),
+    [blocks, fontSize, contentW, lineHeightMult]
+  );
+
+  // 暴露排版信息到全局（用于调试和前端读取）
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.__PRETEXT_FONT_SIZE__ = fontSize;
+      window.__PRETEXT_LINE_HEIGHT__ = lineHeightMult;
+      window.__PRETEXT_CONTENT_BLOCKS__ = blocks.length;
+      window.__PRETEXT_MEASURED_HEIGHT__ = measuredHeight;
+    }
+  }, [fontSize, lineHeightMult, blocks.length, measuredHeight]);
+
   // Position all text
   const positioned = React.useMemo(
     () => layoutBlocks(blocks, fontSize, contentW, pad, lineHeightMult),

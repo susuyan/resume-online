@@ -8,7 +8,13 @@
   --color-light-gray: #718096;
   --color-border: #E2E8F0;
   --color-header-bg: #EDF2F7;
-  --font-primary: 'Noto Sans SC', sans-serif;
+  --font-primary: 'Noto Sans SC', 'InterVariable', sans-serif;
+}
+
+/* PDF 页面尺寸定义 */
+@page {
+  size: A4;
+  margin: 0;
 }
 
 /* PDF 打印优化 */
@@ -25,13 +31,15 @@
 
   .resume-container {
     page-break-inside: avoid;
+    width: 794px;
+    height: 1122px;
   }
 }
 
 .resume-container {
-  width: 620px;
-  height: 877px;
-  padding: 40px;
+  width: 794px;
+  height: 1122px;
+  padding: 50px;
   font-family: var(--font-primary);
   color: var(--color-text);
   background: white;
