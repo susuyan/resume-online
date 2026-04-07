@@ -17,7 +17,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 10  # 整体超时限制
+    timeout-minutes: 10
 
     steps:
       - name: Checkout
@@ -25,15 +25,14 @@ jobs:
 
       # 设置 Bun
       - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+        uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
       # 安装中文字体（轻量级，带超时）
       - name: Install Chinese fonts
-        timeout-minutes: 2  # 字体安装超时
+        timeout-minutes: 2
         run: |
-          # 使用轻量级中文字体，避免下载巨大的 Noto CJK
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends fonts-wqy-microhei 2>&1 | tail -5
           sudo fc-cache -f
@@ -81,9 +80,8 @@ jobs:
 
       # PDF → HTML（使用 pdf2htmlEX）
       - name: Convert PDF to HTML
-        timeout-minutes: 3  # 转换超时
+        timeout-minutes: 3
         run: |
-          # 创建自定义 Dockerfile（轻量级字体）
           cat > Dockerfile.pdf2html << 'EOF'
           FROM pdf2htmlex/pdf2htmlex:0.18.8.rc2-master-20200820-ubuntu-20.04-x86_64
           RUN apt-get update -qq && \
@@ -92,10 +90,8 @@ jobs:
               rm -rf /var/lib/apt/lists/*
           EOF
 
-          # 构建自定义镜像
           docker build -t pdf2htmlex-with-cjk -f Dockerfile.pdf2html .
 
-          # 转换 PDF
           docker run --rm \
             -v "$PWD":/pdf \
             -w /pdf \
