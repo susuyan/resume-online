@@ -17,69 +17,85 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 10  # 整体超时限制
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 2️⃣ 设置 Bun
+      # 设置 Bun
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
 
-      # 3️⃣ 安装中文字体（用于 PDF 生成）
+      # 安装中文字体（轻量级，带超时）
       - name: Install Chinese fonts
+        timeout-minutes: 2  # 字体安装超时
         run: |
-          sudo apt-get update
-          sudo apt-get install -y fonts-noto-cjk fonts-wqy-zenhei
-          sudo fc-cache -fv
+          # 使用轻量级中文字体，避免下载巨大的 Noto CJK
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends fonts-wqy-microhei 2>&1 | tail -5
+          sudo fc-cache -f
+          echo "字体安装完成"
 
-      # 2️⃣ 安装依赖
+      # 缓存并安装依赖
       - name: Install dependencies
-        run: |
+        uses: actions/cache@v4
+        with:
+          path: |
+            build/node_modules
+            ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('build/bun.lock', 'build/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+      - run: |
           cd build
-          bun install
+          bun install --frozen-lockfile
 
-      # 3️⃣ 安装 Puppeteer（需要 Chrome）
+      # 安装 Puppeteer（带缓存）
       - name: Install Puppeteer browsers
-        run: |
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/puppeteer
+          key: ${{ runner.os }}-puppeteer-${{ hashFiles('build/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-puppeteer-
+      - run: |
           cd build
           bunx puppeteer browsers install chrome
         env:
           PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: false
 
-      # 4️⃣ Vite 打包 React 组件
+      # Vite 打包 React 组件
       - name: Build React app
         run: |
           cd build
           bun run build:vite
 
-      # 5️⃣ Puppeteer 生成 PDF
+      # Puppeteer 生成 PDF
       - name: Generate PDF
         run: |
           cd build
           bun run build-pdf.js
 
-      # 6️⃣ PDF → HTML（使用 pdf2htmlEX）
+      # PDF → HTML（使用 pdf2htmlEX）
       - name: Convert PDF to HTML
+        timeout-minutes: 3  # 转换超时
         run: |
-          # 创建自定义 Dockerfile 安装中文字体
+          # 创建自定义 Dockerfile（轻量级字体）
           cat > Dockerfile.pdf2html << 'EOF'
           FROM pdf2htmlex/pdf2htmlex:0.18.8.rc2-master-20200820-ubuntu-20.04-x86_64
-          RUN apt-get update && apt-get install -y fonts-noto-cjk fonts-wqy-zenhei && apt-get clean
+          RUN apt-get update -qq && \
+              apt-get install -y --no-install-recommends fonts-wqy-microhei && \
+              apt-get clean && \
+              rm -rf /var/lib/apt/lists/*
           EOF
 
           # 构建自定义镜像
           docker build -t pdf2htmlex-with-cjk -f Dockerfile.pdf2html .
 
-          # 使用优化的参数转换 PDF
-          # 关键参数说明：
-          # --zoom 1.5: 缩放比例
-          # --process-outline 0: 不生成大纲
-          # --embed-font 1: 嵌入字体到 HTML
-          # --font-size-multiplier 1: 避免字体大小舍入误差
-          # --correct-text-visibility 1: 修复文本可见性，防止重影
+          # 转换 PDF
           docker run --rm \
             -v "$PWD":/pdf \
             -w /pdf \
@@ -93,7 +109,7 @@ jobs:
 
           mv resume.html index.html
 
-      # 7️⃣ 准备 Pages 产物
+      # 准备 Pages 产物
       - name: Prepare site
         run: |
           mkdir site
@@ -101,7 +117,7 @@ jobs:
           mv resume.pdf site/
           [ -f CNAME ] && mv CNAME site/ || true
 
-      # 8️⃣ 上传
+      # 上传
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
