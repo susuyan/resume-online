@@ -1,6 +1,7 @@
 # Project specific
 .alma-snapshots
 .worktrees
+.latex-out/
 
 # macOS
 .DS_Store

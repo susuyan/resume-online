@@ -17,19 +17,17 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 设置 Bun
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: '20'
 
-      # 安装中文字体（轻量级，带超时）
       - name: Install Chinese fonts
         timeout-minutes: 2
         run: |
@@ -38,47 +36,27 @@ jobs:
           sudo fc-cache -f
           echo "字体安装完成"
 
-      # 缓存并安装依赖
-      - name: Install dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            build/node_modules
-            ~/.bun/install/cache
-          key: ${{ runner.os }}-bun-${{ hashFiles('build/bun.lock', 'build/package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-bun-
-      - run: |
-          cd build
-          bun install --frozen-lockfile
-
-      # 安装 Puppeteer（带缓存）
-      - name: Install Puppeteer browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/puppeteer
-          key: ${{ runner.os }}-puppeteer-${{ hashFiles('build/package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-puppeteer-
-      - run: |
-          cd build
-          bunx puppeteer browsers install chrome
-        env:
-          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: false
-
-      # Vite 打包 React 组件
-      - name: Build React app
+      - name: Install TeX Live
+        timeout-minutes: 5
         run: |
-          cd build
-          bun run build:vite
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            texlive-xetex \
+            texlive-lang-chinese \
+            texlive-fonts-recommended \
+            texlive-latex-extra
+          echo "TeX Live 安装完成"
 
-      # Puppeteer 生成 PDF
-      - name: Generate PDF
+      - name: Generate resume.tex from Markdown
+        run: node build/build-tex.js
+
+      - name: Compile PDF with XeLaTeX
         run: |
-          cd build
-          bun run build-pdf.js
+          mkdir -p .latex-out
+          xelatex -interaction=nonstopmode -output-directory=.latex-out resume.tex
+          xelatex -interaction=nonstopmode -output-directory=.latex-out resume.tex
+          cp .latex-out/resume.pdf resume.pdf
 
-      # PDF → HTML（使用 pdf2htmlEX）
       - name: Convert PDF to HTML
         timeout-minutes: 3
         run: |
@@ -105,7 +83,6 @@ jobs:
 
           mv resume.html index.html
 
-      # 准备 Pages 产物
       - name: Prepare site
         run: |
           mkdir site
@@ -113,7 +90,6 @@ jobs:
           mv resume.pdf site/
           [ -f CNAME ] && mv CNAME site/ || true
 
-      # 上传
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

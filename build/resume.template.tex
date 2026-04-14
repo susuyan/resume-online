@@ -1,0 +1,61 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1.55cm]{geometry}
+\usepackage{fontspec}
+\usepackage{xeCJK}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{tabularx}
+\usepackage[hidelinks]{hyperref}
+
+\IfFontExistsTF{PingFang SC}{
+  \setCJKmainfont{PingFang SC}
+}{
+  \IfFontExistsTF{Noto Sans CJK SC}{
+    \setCJKmainfont{Noto Sans CJK SC}
+  }{
+    \IfFontExistsTF{Source Han Sans SC}{
+      \setCJKmainfont{Source Han Sans SC}
+    }{}
+  }
+}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\linespread{1.08}
+\XeTeXlinebreaklocale "zh"
+\XeTeXlinebreakskip = 0pt plus 1pt
+
+\setlist[itemize]{leftmargin=1.2em,itemsep=0.18em,topsep=0.18em,parsep=0em,partopsep=0em}
+
+\titleformat{\section}{\large\bfseries}{}{0pt}{}[\titlerule]
+\titlespacing*{\section}{0pt}{0.55em}{0.35em}
+
+\titleformat{\subsection}{\bfseries}{}{0pt}{}
+\titlespacing*{\subsection}{0pt}{0.35em}{0.15em}
+
+\newcommand{\Header}[4]{
+  {\LARGE\bfseries #1}\par
+  {\normalsize #2}\par
+  \vspace{0.25em}
+  {\small #3}\par
+  {\small #4}\par
+  \vspace{0.6em}
+}
+
+\newcommand{\RoleLine}[3]{
+  \begin{tabularx}{\textwidth}{@{}X r@{}}
+    \textbf{#1} & #3 \\
+  \end{tabularx}
+  {\small #2}\par
+}
+
+\begin{document}
+
+{{HEADER}}
+
+{{SECTIONS}}
+
+\end{document}

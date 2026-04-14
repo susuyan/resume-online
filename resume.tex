@@ -1,0 +1,101 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1.55cm]{geometry}
+\usepackage{fontspec}
+\usepackage{xeCJK}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{tabularx}
+\usepackage[hidelinks]{hyperref}
+
+\IfFontExistsTF{PingFang SC}{
+  \setCJKmainfont{PingFang SC}
+}{
+  \IfFontExistsTF{Noto Sans CJK SC}{
+    \setCJKmainfont{Noto Sans CJK SC}
+  }{
+    \IfFontExistsTF{Source Han Sans SC}{
+      \setCJKmainfont{Source Han Sans SC}
+    }{}
+  }
+}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\linespread{1.08}
+\XeTeXlinebreaklocale "zh"
+\XeTeXlinebreakskip = 0pt plus 1pt
+
+\setlist[itemize]{leftmargin=1.2em,itemsep=0.18em,topsep=0.18em,parsep=0em,partopsep=0em}
+
+\titleformat{\section}{\large\bfseries}{}{0pt}{}[\titlerule]
+\titlespacing*{\section}{0pt}{0.55em}{0.35em}
+
+\titleformat{\subsection}{\bfseries}{}{0pt}{}
+\titlespacing*{\subsection}{0pt}{0.35em}{0.15em}
+
+\newcommand{\Header}[4]{
+  {\LARGE\bfseries #1}\par
+  {\normalsize #2}\par
+  \vspace{0.25em}
+  {\small #3}\par
+  {\small #4}\par
+  \vspace{0.6em}
+}
+
+\newcommand{\RoleLine}[3]{
+  \begin{tabularx}{\textwidth}{@{}X r@{}}
+    \textbf{#1} & #3 \\
+  \end{tabularx}
+  {\small #2}\par
+}
+
+\begin{document}
+
+\Header
+  {余胜民}
+  {全栈软件交付工程师}
+  {17600512027 · \href{mailto:susuyan@163.com}{susuyan@163.com} · 微信: susuyan\_dream · \href{https://github.com/susuyan}{github.com/susuyan}}
+  {专注于端到端系统交付，使用 AI 驱动的开发工作流。过去一年让 Claude Code 和 Cursor 写了 40\% 的代码，然后告诉客户这本来就是计划的一部分。最擅长把模糊的需求变成可交付的产品。}
+
+\section*{PROJECT}
+\subsection*{PICO VR 采集平台}
+\RoleLine{全栈交付顾问}{}{2025.11 -- Present}
+\begin{itemize}
+  \item 设计并交付跨平台 VR 数据采集系统（Unity/C\#/Node.js/React/Flutter）
+  \item 实现高并发数据处理服务，吞吐量达 10,000+ 条传感器数据/秒
+  \item 集成 PICO VR SDK 实现空间定位追踪，数据采集精度提升 35\%
+  \item 提供端到端解决方案，项目周期缩短 30\%
+\end{itemize}
+
+\section*{EXPERIENCE}
+\subsection*{iOS Engineer — 深圳海伦司企业管理有限公司}
+\RoleLine{}{}{2021.04 -- 2025.09}
+\begin{itemize}
+  \item 架构并交付覆盖 500+ 门店的 ERP 和 OA 系统，运营效率提升 40\%
+  \item 设计智能音乐播放系统，门店管理成本降低 60\%
+  \item 使用 Docker 和 GitHub Actions 建立 CI/CD 流程，部署频率从每周提升到每日
+  \item 建立代码评审和自动化测试体系，缺陷率降低 45\%
+\end{itemize}
+\subsection*{iOS Engineer - 北京鱼乐贝贝教育科技有限公司}
+\RoleLine{}{}{2016.12 -- 2021.02}
+\begin{itemize}
+  \item 负责 iOS 客户端开发及小团队（3–4 人）技术推进，参与业务需求拆解、任务分配与版本迭代，支撑公司在全国近两千家门店的业务系统稳定运行。
+  \item 主导将家长端与教师端老项目从 Objective-C 重构为 Swift，完成核心模块重构与架构优化，提升代码可维护性与开发效率，支撑后续功能快速迭代。
+  \item 参与多端产品建设，独立开发子公司及幼儿园客户端应用，并主导 iPad 端「加盟宝」项目，落地门店地图、投资计算器及数据看板等核心功能，提升加盟商决策与运营效率。
+\end{itemize}
+\subsection*{Software Engineer — 北京亿维鸿科技有限公司}
+\RoleLine{}{}{2015.07 -- 2016.11}
+\begin{itemize}
+  \item 负责多款 iOS 客户端应用的开发与维护，涵盖工具类产品（手机归属地工具、手机管家）及游戏类应用，参与功能开发、问题修复与版本迭代，逐步熟悉客户端开发流程及 App Store 上架规范。
+\end{itemize}
+
+\section*{技能}
+{\small TypeScript · React · Python · Node.js · Docker · Claude Code · Cursor · Swift · PostgreSQL · Kubernetes · AWS · Flutter · Unity 3D · C\# · CI/CD · 系统设计 · 快速交付 · 全栈思维 · AI 工具链集成}
+
+\section*{教育背景}
+\textbf{洛阳理工学院} \;|\; 计算机应用技术
+
+\end{document}
