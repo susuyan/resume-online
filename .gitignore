@@ -3,6 +3,10 @@
 .worktrees
 .latex-out/
 
+# Generated artifacts (CI builds these)
+resume.pdf
+resume.tex
+
 # macOS
 .DS_Store
 .DS_Store?
