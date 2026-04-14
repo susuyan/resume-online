@@ -159,16 +159,34 @@ function renderHeaderTex(header) {
   {${summary}}`;
 }
 
-function renderProjectSection(section) {
-  let tex = `\\section*{${section.title}}\n`;
-  for (const item of section.items) {
-    tex += `\\subsection*{${escapeTex(item.name)}}\n`;
+function renderItem(section, item) {
+  let tex = `\\subsection*{${escapeTex(item.name)}}\n`;
+
+  const hasRole = item.role && item.role.trim() !== '';
+  const hasTags = item.tags && item.tags.trim() !== '';
+  const hasPeriod = item.period && item.period.trim() !== '';
+
+  if (hasRole || hasTags) {
     tex += `\\RoleLine{${escapeTex(item.role)}}{${escapeTex(item.tags)}}{${escapeTex(item.period)}}\n`;
+  } else if (hasPeriod) {
+    tex += `{\\small\\color{textmuted}\\hfill ${escapeTex(item.period)}}\\par\n`;
+  }
+
+  if (item.bullets.length > 0) {
     tex += `\\begin{itemize}\n`;
     for (const bullet of item.bullets) {
       tex += `  \\item ${escapeTex(bullet)}\n`;
     }
     tex += `\\end{itemize}\n`;
+  }
+
+  return tex;
+}
+
+function renderProjectSection(section) {
+  let tex = `\\section*{${section.title}}\n`;
+  for (const item of section.items) {
+    tex += renderItem(section, item);
   }
   return tex;
 }
@@ -176,25 +194,21 @@ function renderProjectSection(section) {
 function renderExperienceSection(section) {
   let tex = `\\section*{${section.title}}\n`;
   for (const item of section.items) {
-    tex += `\\subsection*{${escapeTex(item.name)}}\n`;
-    tex += `\\RoleLine{${escapeTex(item.role)}}{${escapeTex(item.tags)}}{${escapeTex(item.period)}}\n`;
-    tex += `\\begin{itemize}\n`;
-    for (const bullet of item.bullets) {
-      tex += `  \\item ${escapeTex(bullet)}\n`;
-    }
-    tex += `\\end{itemize}\n`;
+    tex += renderItem(section, item);
   }
   return tex;
 }
 
 function renderSkillsSection(section) {
-  return `\\section*{${section.title}}\n{\\small ${escapeTex(section.content)}}\n`;
+  // Replace center dots with spaced LaTeX bullets for cleaner visual
+  const formatted = escapeTex(section.content).replace(/\s*·\s*/g, ' \\;\\textperiodcentered\\; ');
+  return `\\section*{${section.title}}\n\\SkillBlock{${formatted}}\n`;
 }
 
 function renderEducationSection(section) {
   let tex = `\\section*{${section.title}}\n`;
   for (const item of section.items) {
-    tex += `\\textbf{${escapeTex(item.name)}} \\;|\\; ${escapeTex(item.detail)}\n`;
+    tex += `\\EduLine{${escapeTex(item.name)}}{${escapeTex(item.detail)}}\n`;
   }
   return tex;
 }

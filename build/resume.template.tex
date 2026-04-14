@@ -1,55 +1,114 @@
 \documentclass[11pt,a4paper]{article}
 
-\usepackage[a4paper,margin=1.55cm]{geometry}
+\usepackage[
+  a4paper,
+  top=1.15cm,
+  bottom=1.15cm,
+  left=1.25cm,
+  right=1.25cm
+]{geometry}
+
 \usepackage{fontspec}
 \usepackage{xeCJK}
 \usepackage{xcolor}
 \usepackage{enumitem}
 \usepackage{titlesec}
 \usepackage{tabularx}
+\usepackage{multicol}
 \usepackage[hidelinks]{hyperref}
+
+% ===== Colors =====
+\definecolor{textprimary}{HTML}{111827}
+\definecolor{textsecondary}{HTML}{4B5563}
+\definecolor{textmuted}{HTML}{9CA3AF}
+\definecolor{rulecolor}{HTML}{E5E7EB}
+
+% ===== Fonts =====
+\IfFontExistsTF{Helvetica Neue}{
+  \setmainfont{Helvetica Neue}
+  \setsansfont{Helvetica Neue}
+}{
+  \IfFontExistsTF{Arial}{
+    \setmainfont{Arial}
+    \setsansfont{Arial}
+  }{}
+}
 
 \IfFontExistsTF{PingFang SC}{
   \setCJKmainfont{PingFang SC}
+  \setCJKsansfont{PingFang SC}
 }{
   \IfFontExistsTF{Noto Sans CJK SC}{
     \setCJKmainfont{Noto Sans CJK SC}
+    \setCJKsansfont{Noto Sans CJK SC}
   }{
     \IfFontExistsTF{Source Han Sans SC}{
       \setCJKmainfont{Source Han Sans SC}
+      \setCJKsansfont{Source Han Sans SC}
     }{}
   }
 }
 
+% ===== Base =====
 \pagestyle{empty}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt}
-\linespread{1.08}
+\linespread{1.10}
 \XeTeXlinebreaklocale "zh"
 \XeTeXlinebreakskip = 0pt plus 1pt
 
-\setlist[itemize]{leftmargin=1.2em,itemsep=0.18em,topsep=0.18em,parsep=0em,partopsep=0em}
+% ===== Lists =====
+\setlist[itemize]{
+  leftmargin=1.0em,
+  itemsep=0.08em,
+  topsep=0.12em,
+  parsep=0pt,
+  partopsep=0pt,
+  label={\color{textmuted}\scriptsize$\bullet$}
+}
 
-\titleformat{\section}{\large\bfseries}{}{0pt}{}[\titlerule]
-\titlespacing*{\section}{0pt}{0.55em}{0.35em}
+% ===== Section =====
+\titleformat{\section}
+  {\sffamily\small\bfseries\color{textprimary}\addfontfeatures{LetterSpace=4}}
+  {}
+  {0pt}
+  {\MakeUppercase}
+  [\vspace{-0.55em}{\color{rulecolor}\rule{\textwidth}{0.4pt}}\vspace{0.15em}]
+\titlespacing*{\section}{0pt}{0.6em}{0.3em}
 
-\titleformat{\subsection}{\bfseries}{}{0pt}{}
-\titlespacing*{\subsection}{0pt}{0.35em}{0.15em}
+% ===== Subsection =====
+\titleformat{\subsection}
+  {\sffamily\normalsize\bfseries\color{textprimary}}
+  {}
+  {0pt}
+  {}
+  []
+\titlespacing*{\subsection}{0pt}{0.28em}{0.02em}
 
-\newcommand{\Header}[4]{
-  {\LARGE\bfseries #1}\par
-  {\normalsize #2}\par
+% ===== Commands =====
+\newcommand{\Header}[4]{%
+  {\Huge\bfseries\sffamily\color{textprimary} #1}\par
+  \vspace{0.12em}
+  {\large\color{textsecondary}\sffamily #2}\par
   \vspace{0.25em}
-  {\small #3}\par
-  {\small #4}\par
+  {\small\color{textsecondary} #3}\par
+  \vspace{0.3em}
+  {\small\color{textmuted} #4}
   \vspace{0.6em}
 }
 
-\newcommand{\RoleLine}[3]{
-  \begin{tabularx}{\textwidth}{@{}X r@{}}
-    \textbf{#1} & #3 \\
-  \end{tabularx}
-  {\small #2}\par
+\newcommand{\RoleLine}[3]{%
+  \begin{tabularx}{\textwidth}{@{}X r@{}}\textbf{\color{textsecondary}#1} & {\small\color{textmuted}#3} \\ \end{tabularx}
+  \ifx&#2&\else{\small\color{textmuted}#2\par}\fi
+  \vspace{0.05em}
+}
+
+\newcommand{\SkillBlock}[1]{%
+  \vspace{0.1em}{\small\color{textsecondary}#1}%
+}
+
+\newcommand{\EduLine}[2]{%
+  \textbf{\color{textprimary}#1} \hfill {\small\color{textmuted}#2}%
 }
 
 \begin{document}
