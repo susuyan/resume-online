@@ -100,8 +100,8 @@ function parseResumeMarkdown(md) {
 
       if (sectionTitle === 'PROJECT') section.type = 'project';
       else if (sectionTitle === 'EXPERIENCE') section.type = 'experience';
-      else if (sectionTitle === '技能') section.type = 'skills';
-      else if (sectionTitle === '教育背景') section.type = 'education';
+      else if (sectionTitle === '技能' || sectionTitle === 'SKILLS') section.type = 'skills';
+      else if (sectionTitle === '教育背景' || sectionTitle === 'EDUCATION') section.type = 'education';
 
       if (section.type === 'skills') {
         while (i < lines.length && !lines[i].trim().startsWith('## ')) {
@@ -231,7 +231,8 @@ function renderExperienceSection(section) {
 }
 
 function renderSkillsSection(section) {
-  let tex = `\\section*{${section.title}}\n`;
+  const title = section.title === 'SKILLS' ? '技能' : section.title;
+  let tex = `\\section*{${title}}\n`;
   for (const item of section.items) {
     tex += `\\SkillRow{${formatInlineTex(item.name)}}{${formatInlineTex(item.detail)}}\n`;
   }
@@ -239,7 +240,8 @@ function renderSkillsSection(section) {
 }
 
 function renderEducationSection(section) {
-  let tex = `\\section*{${section.title}}\n`;
+  const title = section.title === 'EDUCATION' ? '教育背景' : section.title;
+  let tex = `\\section*{${title}}\n`;
   for (const item of section.items) {
     tex += `\\EduLine{${escapeTex(item.name)}}{${escapeTex(item.detail)}}\n`;
   }

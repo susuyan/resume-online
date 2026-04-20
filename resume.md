@@ -44,15 +44,16 @@
 
 ---
 
-## 技能
+## SKILLS
 
 - **全栈/前端应用**：TypeScript、React、Node.js、PostgreSQL
 - **移动端**：Swift、iOS、Flutter
-- **工程化交付**：Docker、CI/CD（GitHub Actions）、自动化测试、Kubernetes、AWS
+- **工程化交付**：Docker、CI/CD（GitHub Actions）、自动化测试
+- **Agent 编排**：Agent 循环、工作流编排
 - **方法论与工具**：系统设计、快速交付、全栈思维、AI 工具链集成
 
 ---
 
-## 教育背景
+## EDUCATION 
 
 **洛阳理工学院** | 计算机应用技术
