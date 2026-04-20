@@ -1,11 +1,11 @@
-\documentclass[9.5pt,a4paper]{article}
+\documentclass[9.8pt,a4paper]{article}
 
 \usepackage[
   a4paper,
-  top=0.78cm,
-  bottom=0.78cm,
-  left=0.95cm,
-  right=0.95cm
+  top=0.85cm,
+  bottom=0.85cm,
+  left=1.10cm,
+  right=1.10cm
 ]{geometry}
 
 \usepackage{fontspec}
@@ -18,133 +18,146 @@
 \usepackage[hidelinks]{hyperref}
 
 % ===== Palette =====
-\definecolor{ink}{HTML}{0D1117}
-\definecolor{body}{HTML}{374151}
-\definecolor{muted}{HTML}{9CA3AF}
-\definecolor{rule}{HTML}{E5E7EB}
-\definecolor{hi}{HTML}{1D4ED8}
-\definecolor{hisoft}{HTML}{3B82F6}
+\definecolor{awesome}{HTML}{0D47A1}
+\definecolor{darktext}{HTML}{0F172A}
+\definecolor{bodytext}{HTML}{374151}
+\definecolor{graytext}{HTML}{64748B}
+\definecolor{lighttext}{HTML}{9CA3AF}
+\definecolor{divcolor}{HTML}{CBD5E1}
 
-% ===== Fonts =====
-\IfFontExistsTF{TeX Gyre Heros}{
-  \setmainfont{TeX Gyre Heros}
-  \setsansfont{TeX Gyre Heros}
+% ===== Latin fonts — Source Sans 3 → TeX Gyre Heros → Helvetica Neue =====
+\IfFontExistsTF{Source Sans 3}{
+  \setmainfont{Source Sans 3}[
+    UprightFont = *-Regular,
+    BoldFont    = *-SemiBold,
+    ItalicFont  = *-Italic
+  ]
+  \setsansfont{Source Sans 3}[
+    UprightFont = *-Regular,
+    BoldFont    = *-SemiBold
+  ]
 }{
-  \IfFontExistsTF{Helvetica Neue}{
-    \setmainfont{Helvetica Neue}
-    \setsansfont{Helvetica Neue}
+  \IfFontExistsTF{TeX Gyre Heros}{
+    \setmainfont{TeX Gyre Heros}
+    \setsansfont{TeX Gyre Heros}
   }{
-    \IfFontExistsTF{Arial}{
-      \setmainfont{Arial}
-      \setsansfont{Arial}
+    \IfFontExistsTF{Helvetica Neue}{
+      \setmainfont{Helvetica Neue}
+      \setsansfont{Helvetica Neue}
     }{}
   }
 }
 
+% ===== CJK fonts — PingFang SC → Noto Sans CJK → WenQuanYi =====
 \IfFontExistsTF{PingFang SC}{
-  \setCJKmainfont{PingFang SC}
-  \setCJKsansfont{PingFang SC}
+  \setCJKmainfont{PingFang SC}[
+    BoldFont   = PingFang SC Semibold,
+    ItalicFont = PingFang SC Light
+  ]
+  \setCJKsansfont{PingFang SC}[
+    BoldFont = PingFang SC Semibold
+  ]
 }{
-  \IfFontExistsTF{WenQuanYi Micro Hei}{
-    \setCJKmainfont{WenQuanYi Micro Hei}
-    \setCJKsansfont{WenQuanYi Micro Hei}
+  \IfFontExistsTF{Noto Sans CJK SC}{
+    \setCJKmainfont{Noto Sans CJK SC}
+    \setCJKsansfont{Noto Sans CJK SC}
   }{
-    \IfFontExistsTF{Noto Sans CJK SC}{
-      \setCJKmainfont{Noto Sans CJK SC}
-      \setCJKsansfont{Noto Sans CJK SC}
-    }{
-      \IfFontExistsTF{Source Han Sans SC}{
-        \setCJKmainfont{Source Han Sans SC}
-        \setCJKsansfont{Source Han Sans SC}
-      }{}
-    }
+    \IfFontExistsTF{WenQuanYi Micro Hei}{
+      \setCJKmainfont{WenQuanYi Micro Hei}
+      \setCJKsansfont{WenQuanYi Micro Hei}
+    }{}
   }
 }
+
+% xeCJK: kaiming compresses leading/trailing punctuation for tighter lines
+\xeCJKsetup{PunctStyle = kaiming, CheckSingle = true}
 
 % ===== Base =====
 \pagestyle{empty}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt}
 \setlength{\tabcolsep}{0pt}
-\linespread{1.0}
+\linespread{1.05}
 \XeTeXlinebreaklocale "zh"
 \XeTeXlinebreakskip = 0pt plus 0.5pt
 
-% ===== Lists =====
+% ===== Lists — Awesome-CV style: topsep -1mm, no itemsep =====
 \setlist[itemize]{
-  leftmargin=1.05em,
-  itemsep=0.03em,
-  topsep=0.08em,
-  parsep=0pt,
-  partopsep=0pt,
-  label={\color{hisoft}\raisebox{0.30ex}{\rule{0.46em}{0.46em}}}
+  leftmargin = 1.4em,
+  itemsep    = 0.5pt,
+  topsep     = -1mm,
+  parsep     = 0pt,
+  partopsep  = 0pt,
+  label      = {\color{awesome}\fontsize{6.5}{6.5}\selectfont$\bullet$}
 }
 
 % ===== Section =====
 \titleformat{\section}
-  {\fontsize{7}{8}\selectfont\bfseries\sffamily\color{hi}\addfontfeatures{LetterSpace=12}}
+  {\fontsize{8.5}{10}\selectfont\bfseries\sffamily\color{awesome}%
+   \addfontfeatures{LetterSpace=8}}
   {}
   {0pt}
   {\MakeUppercase}
-  [\vspace{-0.28em}{\color{rule}\rule{\textwidth}{0.5pt}}\vspace{0.12em}]
-\titlespacing*{\section}{0pt}{0.42em}{0.08em}
+  [\vspace{-0.30em}{\color{divcolor}\rule{\textwidth}{0.6pt}}\vspace{0.08em}]
+\titlespacing*{\section}{0pt}{0.48em}{0.08em}
 
 % ===== Header =====
+% Awesome-CV layout: name left (large), contact right (small, top-aligned)
+% accent rule as visual separator between header and body
 \newcommand{\Header}[4]{%
-  % Name row: name left, contact right
   \begin{tabularx}{\textwidth}{@{}X r@{}}
-    {\fontsize{21}{23}\selectfont\bfseries\sffamily\color{ink} #1} &
-    \raisebox{5pt}{\fontsize{7.8}{10}\selectfont\sffamily\color{muted} #3}
+    {\fontsize{23}{25}\selectfont\bfseries\sffamily\color{darktext} #1} &
+    \raisebox{7pt}{%
+      \fontsize{7.8}{10}\selectfont\sffamily\color{graytext} #3}
+  \end{tabularx}\par
+  \vspace{0.04em}
+  {\fontsize{9.5}{12}\selectfont\sffamily\bfseries\color{awesome} #2}\par
+  \vspace{0.08em}
+  {\color{awesome}\rule{\textwidth}{2pt}}\par
+  \vspace{0.14em}
+  {\fontsize{8.8}{13}\selectfont\color{bodytext} #4}\par
+  \vspace{0.32em}
+}
+
+% ===== Entry heading — Awesome-CV cventry style =====
+% negative pre-vspace pulls entry up; separator bar between title and org
+\newcommand{\EntryHeading}[3]{%
+  \vspace{-0.8mm}%
+  \begin{tabularx}{\textwidth}{@{}X r@{}}
+    {\fontsize{9.5}{11}\selectfont\sffamily\bfseries\color{darktext} #1%
+      \ifx&#2&\else
+        {\color{divcolor}\ \vrule width 0.5pt height 7pt depth 1.5pt\ }%
+        {\fontsize{9}{11}\selectfont\normalfont\color{bodytext} #2}%
+      \fi} &
+    {\fontsize{7.8}{9}\selectfont\sffamily\color{lighttext} #3}
+  \end{tabularx}\par
+  \vspace{-0.5mm}
+}
+
+% ===== MetaLine (role tag below entry) =====
+\newcommand{\MetaLine}[1]{%
+  {\fontsize{8.5}{10}\selectfont\sffamily\color{awesome} #1}\par
+  \vspace{-0.5mm}
+}
+
+% ===== Skill row =====
+\newcommand{\SkillRow}[2]{%
+  \begin{tabularx}{\textwidth}{@{}p{2.55cm}@{\hspace{0.55em}}X@{}}
+    {\fontsize{7.8}{9}\selectfont\sffamily\bfseries\color{awesome} #1} &
+    {\fontsize{8.8}{11}\selectfont\color{bodytext} #2}
   \end{tabularx}\par
   \vspace{0.05em}
-  % Title
-  {\fontsize{9}{11}\selectfont\sffamily\bfseries\color{hi} #2}\par
-  \vspace{0.10em}
-  % Accent rule
-  {\color{hi}\rule{\textwidth}{1.8pt}}\par
-  \vspace{0.18em}
-  % Summary
-  {\fontsize{8.5}{12}\selectfont\color{body} #4}\par
-  \vspace{0.30em}
 }
 
-% ===== Entry Heading =====
-\newcommand{\EntryHeading}[3]{%
-  \begin{tabularx}{\textwidth}{@{}X r@{}}
-    {\fontsize{9}{11}\selectfont\sffamily\bfseries\color{ink} #1%
-      \ifx&#2&\else
-        {\color{rule}\ \vrule width 0.5pt height 7pt depth 1pt\ }%
-        {\normalfont\fontsize{8.5}{11}\selectfont\color{body} #2}%
-      \fi} &
-    {\fontsize{7.5}{9}\selectfont\sffamily\color{muted} #3}
-  \end{tabularx}\par
-  \vspace{0.01em}
-}
-
-% ===== Meta Line (role/tag below entry heading) =====
-\newcommand{\MetaLine}[1]{%
-  {\fontsize{8}{10}\selectfont\sffamily\color{hisoft} #1}\par
-  \vspace{0.01em}
-}
-
-% ===== Skill Row =====
-\newcommand{\SkillRow}[2]{%
-  \begin{tabularx}{\textwidth}{@{}p{2.50cm}@{\hspace{0.50em}}X@{}}
-    {\fontsize{7.5}{9}\selectfont\sffamily\bfseries\color{hi} #1} &
-    {\fontsize{8.5}{10.5}\selectfont\color{body} #2}
-  \end{tabularx}\par
-  \vspace{0.07em}
-}
-
-% ===== Education Line =====
+% ===== Education line =====
 \newcommand{\EduLine}[2]{%
-  {\fontsize{8.5}{10}\selectfont\bfseries\color{ink} #1}%
-  {\fontsize{8.5}{10}\selectfont\color{rule}\ \vrule width 0.5pt height 6.5pt depth 1pt\ }%
-  {\fontsize{8.5}{10}\selectfont\color{body} #2}%
+  {\fontsize{9}{11}\selectfont\sffamily\bfseries\color{darktext} #1}%
+  {\color{divcolor}\ \vrule width 0.5pt height 7pt depth 1.5pt\ }%
+  {\fontsize{9}{11}\selectfont\color{bodytext} #2}%
 }
 
-% ===== Metric =====
-\newcommand{\Metric}[1]{{\bfseries\color{hi} #1}}
+% ===== Metric highlight =====
+\newcommand{\Metric}[1]{{\bfseries\color{awesome} #1}}
 
 \begin{document}
 
