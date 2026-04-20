@@ -1,11 +1,11 @@
-\documentclass[11pt,a4paper]{article}
+\documentclass[10pt,a4paper]{article}
 
 \usepackage[
   a4paper,
-  top=1.15cm,
-  bottom=1.15cm,
-  left=1.25cm,
-  right=1.25cm
+  top=0.95cm,
+  bottom=0.95cm,
+  left=1.05cm,
+  right=1.05cm
 ]{geometry}
 
 \usepackage{fontspec}
@@ -14,17 +14,21 @@
 \usepackage{enumitem}
 \usepackage{titlesec}
 \usepackage{tabularx}
-\usepackage{multicol}
 \usepackage[hidelinks]{hyperref}
 
 % ===== Colors =====
-\definecolor{textprimary}{HTML}{111827}
-\definecolor{textsecondary}{HTML}{4B5563}
-\definecolor{textmuted}{HTML}{9CA3AF}
-\definecolor{rulecolor}{HTML}{E5E7EB}
+\definecolor{textprimary}{HTML}{0F172A}
+\definecolor{textsecondary}{HTML}{475569}
+\definecolor{textmuted}{HTML}{94A3B8}
+\definecolor{rulecolor}{HTML}{E2E8F0}
+\definecolor{accent}{HTML}{2563EB}
 
 % ===== Fonts =====
-\IfFontExistsTF{Helvetica Neue}{
+\IfFontExistsTF{TeX Gyre Heros}{
+  \setmainfont{TeX Gyre Heros}
+  \setsansfont{TeX Gyre Heros}
+}{
+  \IfFontExistsTF{Helvetica Neue}{
   \setmainfont{Helvetica Neue}
   \setsansfont{Helvetica Neue}
 }{
@@ -33,11 +37,16 @@
     \setsansfont{Arial}
   }{}
 }
+}
 
 \IfFontExistsTF{PingFang SC}{
   \setCJKmainfont{PingFang SC}
   \setCJKsansfont{PingFang SC}
 }{
+  \IfFontExistsTF{WenQuanYi Micro Hei}{
+    \setCJKmainfont{WenQuanYi Micro Hei}
+    \setCJKsansfont{WenQuanYi Micro Hei}
+  }{
   \IfFontExistsTF{Noto Sans CJK SC}{
     \setCJKmainfont{Noto Sans CJK SC}
     \setCJKsansfont{Noto Sans CJK SC}
@@ -47,68 +56,74 @@
       \setCJKsansfont{Source Han Sans SC}
     }{}
   }
+  }
 }
 
 % ===== Base =====
 \pagestyle{empty}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt}
-\linespread{1.10}
+\setlength{\tabcolsep}{0pt}
+\linespread{1.03}
 \XeTeXlinebreaklocale "zh"
 \XeTeXlinebreakskip = 0pt plus 1pt
 
 % ===== Lists =====
 \setlist[itemize]{
-  leftmargin=1.0em,
+  leftmargin=1.15em,
   itemsep=0.08em,
-  topsep=0.12em,
+  topsep=0.10em,
   parsep=0pt,
   partopsep=0pt,
-  label={\color{textmuted}\scriptsize$\bullet$}
+  label={\color{accent}\scriptsize$\bullet$}
 }
 
 % ===== Section =====
 \titleformat{\section}
-  {\sffamily\small\bfseries\color{textprimary}\addfontfeatures{LetterSpace=4}}
+  {\sffamily\small\bfseries\color{textprimary}\addfontfeatures{LetterSpace=5}}
   {}
   {0pt}
   {\MakeUppercase}
-  [\vspace{-0.55em}{\color{rulecolor}\rule{\textwidth}{0.4pt}}\vspace{0.15em}]
-\titlespacing*{\section}{0pt}{0.6em}{0.3em}
-
-% ===== Subsection =====
-\titleformat{\subsection}
-  {\sffamily\normalsize\bfseries\color{textprimary}}
-  {}
-  {0pt}
-  {}
-  []
-\titlespacing*{\subsection}{0pt}{0.28em}{0.02em}
+  [\vspace{-0.42em}{\color{rulecolor}\rule{\textwidth}{0.45pt}}\vspace{0.14em}]
+\titlespacing*{\section}{0pt}{0.52em}{0.22em}
 
 % ===== Commands =====
 \newcommand{\Header}[4]{%
-  {\Huge\bfseries\sffamily\color{textprimary} #1}\par
-  \vspace{0.12em}
-  {\large\color{textsecondary}\sffamily #2}\par
-  \vspace{0.25em}
+  {\fontsize{19}{21}\selectfont\bfseries\sffamily\color{textprimary} #1}\par
+  \vspace{0.08em}
+  {\small\sffamily\color{accent} #2}\par
+  \vspace{0.20em}
   {\small\color{textsecondary} #3}\par
-  \vspace{0.3em}
-  {\small\color{textmuted} #4}
-  \vspace{0.6em}
+  \vspace{0.20em}
+  {\footnotesize\color{textsecondary} #4}\par
+  \vspace{0.38em}
 }
 
-\newcommand{\RoleLine}[3]{%
-  \begin{tabularx}{\textwidth}{@{}X r@{}}\textbf{\color{textsecondary}#1} & {\small\color{textmuted}#3} \\ \end{tabularx}
-  \ifx&#2&\else{\small\color{textmuted}#2\par}\fi
-  \vspace{0.05em}
+\newcommand{\Metric}[1]{{\bfseries\color{accent}#1}}
+
+\newcommand{\EntryHeading}[3]{%
+  \begin{tabularx}{\textwidth}{@{}X r@{}}
+    {\sffamily\bfseries\color{textprimary} #1\ifx&#2&\else\ {\normalfont\color{textsecondary}#2}\fi} &
+    {\footnotesize\color{textmuted} #3}
+  \end{tabularx}\par
+  \vspace{0.02em}
 }
 
-\newcommand{\SkillBlock}[1]{%
-  \vspace{0.1em}{\small\color{textsecondary}#1}%
+\newcommand{\MetaLine}[1]{%
+  {\small\sffamily\color{accent} #1}\par
+  \vspace{0.02em}
+}
+
+\newcommand{\SkillRow}[2]{%
+  \begin{tabularx}{\textwidth}{@{}p{3.35cm}@{\hspace{0.7em}}X@{}}
+    {\footnotesize\sffamily\bfseries\color{textprimary} #1} &
+    {\footnotesize\color{textsecondary} #2}
+  \end{tabularx}\par
+  \vspace{0.06em}
 }
 
 \newcommand{\EduLine}[2]{%
-  \textbf{\color{textprimary}#1} \hfill {\small\color{textmuted}#2}%
+  {\small\bfseries\color{textprimary}#1} \hfill {\small\color{textmuted}#2}%
 }
 
 \begin{document}

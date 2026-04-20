@@ -19,10 +19,27 @@ function escapeTex(str) {
     .replace(/\^/g, '\\textasciicircum{}');
 }
 
+function formatInlineTex(str) {
+  return escapeTex(str)
+    .replace(/→/g, '$\\\\rightarrow$')
+    .replace(/\*\*(.+?)\*\*/g, '\\\\Metric{$1}');
+}
+
+function splitHeadline(str) {
+  const parts = str.split(/\s*[—-]\s*/);
+  if (parts.length < 2) {
+    return { title: str.trim(), org: '' };
+  }
+  return {
+    title: parts[0].trim(),
+    org: parts.slice(1).join(' — ').trim()
+  };
+}
+
 function parseResumeMarkdown(md) {
   const lines = md.split('\n');
   const result = {
-    header: { name: '', title: '', contact: '', summary: '' },
+    header: { name: '', title: '', contact: '', summaryLines: [] },
     sections: []
   };
 
@@ -51,14 +68,23 @@ function parseResumeMarkdown(md) {
   }
 
   // Parse summary until ---
+  let currentParagraph = [];
   while (i < lines.length) {
     const line = lines[i].trim();
     if (line === '---') {
+      if (currentParagraph.length > 0) {
+        result.header.summaryLines.push(currentParagraph.join(' '));
+      }
       i++;
       break;
     }
-    if (line !== '') {
-      result.header.summary += (result.header.summary ? ' ' : '') + line;
+    if (line === '') {
+      if (currentParagraph.length > 0) {
+        result.header.summaryLines.push(currentParagraph.join(' '));
+        currentParagraph = [];
+      }
+    } else {
+      currentParagraph.push(line);
     }
     i++;
   }
@@ -78,19 +104,23 @@ function parseResumeMarkdown(md) {
       else if (sectionTitle === '教育背景') section.type = 'education';
 
       if (section.type === 'skills') {
-        let content = '';
         while (i < lines.length && !lines[i].trim().startsWith('## ')) {
           const l = lines[i].trim();
           if (l === '---') {
             i++;
             continue;
           }
-          if (l !== '') {
-            content += (content ? ' ' : '') + l;
+          if (l.startsWith('- ')) {
+            const raw = l.slice(2).trim();
+            const match = raw.match(/^\*\*(.*?)\*\*[：:]\s*(.+)$/);
+            if (match) {
+              section.items.push({ name: match[1].trim(), detail: match[2].trim() });
+            } else if (raw !== '') {
+              section.items.push({ name: '', detail: raw });
+            }
           }
           i++;
         }
-        section.content = content;
       } else if (section.type === 'education') {
         while (i < lines.length && !lines[i].trim().startsWith('## ')) {
           const eduLine = lines[i].trim();
@@ -149,9 +179,11 @@ function renderHeaderTex(header) {
   const name = escapeTex(header.name);
   const title = escapeTex(header.title);
   const contact = escapeTex(header.contact)
-    .replace(/github\.com\/([^\s]+)/, '\\href{https://github.com/$1}{github.com/$1}')
-    .replace(/susuyan@163\.com/, '\\href{mailto:susuyan@163.com}{susuyan@163.com}');
-  const summary = escapeTex(header.summary);
+    .replace(/https:\/\/github\.com\/([^\s]+)/, '@@GITHUB:$1@@')
+    .replace(/github\.com\/([^\s]+)/, '@@GITHUB:$1@@')
+    .replace(/susuyan@163\.com/, '\\href{mailto:susuyan@163.com}{susuyan@163.com}')
+    .replace(/@@GITHUB:([^\s@]+)@@/g, '\\href{https://github.com/$1}{github.com/$1}');
+  const summary = header.summaryLines.map(formatInlineTex).join('\\\\');
 
   return `\\Header\n  {${name}}
   {${title}}
@@ -160,22 +192,21 @@ function renderHeaderTex(header) {
 }
 
 function renderItem(section, item) {
-  let tex = `\\subsection*{${escapeTex(item.name)}}\n`;
+  const headline = splitHeadline(item.name);
+  let tex = `\\EntryHeading{${formatInlineTex(headline.title)}}{${formatInlineTex(headline.org)}}{${formatInlineTex(item.period)}}\n`;
 
   const hasRole = item.role && item.role.trim() !== '';
   const hasTags = item.tags && item.tags.trim() !== '';
-  const hasPeriod = item.period && item.period.trim() !== '';
+  const meta = [item.role, item.tags].filter(Boolean).join(' · ');
 
   if (hasRole || hasTags) {
-    tex += `\\RoleLine{${escapeTex(item.role)}}{${escapeTex(item.tags)}}{${escapeTex(item.period)}}\n`;
-  } else if (hasPeriod) {
-    tex += `{\\small\\color{textmuted}\\hfill ${escapeTex(item.period)}}\\par\n`;
+    tex += `\\MetaLine{${formatInlineTex(meta)}}\n`;
   }
 
   if (item.bullets.length > 0) {
-    tex += `\\begin{itemize}\n`;
+    tex += `\\begin{itemize}\n\\small\n`;
     for (const bullet of item.bullets) {
-      tex += `  \\item ${escapeTex(bullet)}\n`;
+      tex += `  \\item ${formatInlineTex(bullet)}\n`;
     }
     tex += `\\end{itemize}\n`;
   }
@@ -200,9 +231,11 @@ function renderExperienceSection(section) {
 }
 
 function renderSkillsSection(section) {
-  // Replace center dots with spaced LaTeX bullets for cleaner visual
-  const formatted = escapeTex(section.content).replace(/\s*·\s*/g, ' \\;\\textperiodcentered\\; ');
-  return `\\section*{${section.title}}\n\\SkillBlock{${formatted}}\n`;
+  let tex = `\\section*{${section.title}}\n`;
+  for (const item of section.items) {
+    tex += `\\SkillRow{${formatInlineTex(item.name)}}{${formatInlineTex(item.detail)}}\n`;
+  }
+  return tex;
 }
 
 function renderEducationSection(section) {
