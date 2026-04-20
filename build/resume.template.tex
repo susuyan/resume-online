@@ -1,9 +1,9 @@
-\documentclass[9.8pt,a4paper]{article}
+\documentclass[10pt,a4paper]{article}
 
 \usepackage[
   a4paper,
-  top=0.85cm,
-  bottom=0.85cm,
+  top=0.90cm,
+  bottom=0.90cm,
   left=1.10cm,
   right=1.10cm
 ]{geometry}
@@ -77,15 +77,15 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt}
 \setlength{\tabcolsep}{0pt}
-\linespread{1.05}
+\linespread{1.10}
 \XeTeXlinebreaklocale "zh"
 \XeTeXlinebreakskip = 0pt plus 0.5pt
 
-% ===== Lists — Awesome-CV style: topsep -1mm, no itemsep =====
+% ===== Lists =====
 \setlist[itemize]{
   leftmargin = 1.4em,
-  itemsep    = 0.5pt,
-  topsep     = -1mm,
+  itemsep    = 2.5pt,
+  topsep     = 2.5mm,
   parsep     = 0pt,
   partopsep  = 0pt,
   label      = {\color{awesome}\fontsize{6.5}{6.5}\selectfont$\bullet$}
@@ -98,8 +98,8 @@
   {}
   {0pt}
   {\MakeUppercase}
-  [\vspace{-0.30em}{\color{divcolor}\rule{\textwidth}{0.6pt}}\vspace{0.08em}]
-\titlespacing*{\section}{0pt}{0.48em}{0.08em}
+  [\vspace{-0.28em}{\color{divcolor}\rule{\textwidth}{0.6pt}}\vspace{0.10em}]
+\titlespacing*{\section}{0pt}{0.70em}{0.15em}
 
 % ===== Header =====
 % Awesome-CV layout: name left (large), contact right (small, top-aligned)
@@ -107,22 +107,21 @@
 \newcommand{\Header}[4]{%
   \begin{tabularx}{\textwidth}{@{}X r@{}}
     {\fontsize{23}{25}\selectfont\bfseries\sffamily\color{darktext} #1} &
-    \raisebox{7pt}{%
-      \fontsize{7.8}{10}\selectfont\sffamily\color{graytext} #3}
+    \raisebox{6pt}{%
+      \fontsize{8}{10.5}\selectfont\sffamily\color{graytext} #3}
   \end{tabularx}\par
-  \vspace{0.04em}
+  \vspace{0.06em}
   {\fontsize{9.5}{12}\selectfont\sffamily\bfseries\color{awesome} #2}\par
-  \vspace{0.08em}
+  \vspace{0.10em}
   {\color{awesome}\rule{\textwidth}{2pt}}\par
-  \vspace{0.14em}
-  {\fontsize{8.8}{13}\selectfont\color{bodytext} #4}\par
-  \vspace{0.32em}
+  \vspace{0.20em}
+  {\fontsize{9}{14}\selectfont\color{bodytext} #4}\par
+  \vspace{0.48em}
 }
 
-% ===== Entry heading — Awesome-CV cventry style =====
-% negative pre-vspace pulls entry up; separator bar between title and org
+% ===== Entry heading =====
 \newcommand{\EntryHeading}[3]{%
-  \vspace{-0.8mm}%
+  \vspace{2mm}%
   \begin{tabularx}{\textwidth}{@{}X r@{}}
     {\fontsize{9.5}{11}\selectfont\sffamily\bfseries\color{darktext} #1%
       \ifx&#2&\else
@@ -131,13 +130,13 @@
       \fi} &
     {\fontsize{7.8}{9}\selectfont\sffamily\color{lighttext} #3}
   \end{tabularx}\par
-  \vspace{-0.5mm}
+  \vspace{0.5mm}
 }
 
 % ===== MetaLine (role tag below entry) =====
 \newcommand{\MetaLine}[1]{%
   {\fontsize{8.5}{10}\selectfont\sffamily\color{awesome} #1}\par
-  \vspace{-0.5mm}
+  \vspace{0.5mm}
 }
 
 % ===== Skill row =====
@@ -146,7 +145,7 @@
     {\fontsize{7.8}{9}\selectfont\sffamily\bfseries\color{awesome} #1} &
     {\fontsize{8.8}{11}\selectfont\color{bodytext} #2}
   \end{tabularx}\par
-  \vspace{0.05em}
+  \vspace{0.14em}
 }
 
 % ===== Education line =====

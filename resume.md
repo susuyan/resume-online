@@ -2,10 +2,10 @@
 全栈软件交付工程师
 17600512027 · susuyan@163.com · 微信: susuyan_dream · https://github.com/susuyan
 
-端到端全栈交付工程师，擅长将模糊需求拆解为可落地方案并快速推进
-（需求澄清 → 方案设计 → 研发联调 → 上线运维）。
+擅长将模糊需求拆解为可落地方案并快速推进（需求澄清 → 方案设计 → 研发联调 → 上线运维）。
 
-具备 Web/Node/React 全栈与工程化交付能力（CI/CD、容器化、自动化测试），
+具备 Web/Node/React 全栈与工程化交付能力（CI/CD、容器化、自动化测试）。
+
 多年 iOS 原生开发经验，善用 Claude Code / Cursor 等 AI 工具链提升交付效率。
 
 ---
@@ -49,7 +49,7 @@
 - **全栈/前端应用**：TypeScript、React、Node.js、PostgreSQL
 - **移动端**：Swift、iOS、Flutter
 - **工程化交付**：Docker、CI/CD（GitHub Actions）、自动化测试、Kubernetes、AWS
-- **方法论与工具**：系统设计、快速交付、全栈思维、AI 工具链集成（Claude Code、Cursor）
+- **方法论与工具**：系统设计、快速交付、全栈思维、AI 工具链集成
 
 ---
 
