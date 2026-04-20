@@ -84,53 +84,53 @@
 % ===== Lists =====
 \setlist[itemize]{
   leftmargin = 1.4em,
-  itemsep    = 2.5pt,
-  topsep     = 2.5mm,
+  itemsep    = 2pt,
+  topsep     = 2mm,
   parsep     = 0pt,
   partopsep  = 0pt,
-  label      = {\color{awesome}\fontsize{6.5}{6.5}\selectfont$\bullet$}
+  label      = {\color{graytext}\fontsize{6.5}{6.5}\selectfont$\bullet$}
 }
 
 % ===== Section =====
 \titleformat{\section}
-  {\fontsize{8.5}{10}\selectfont\bfseries\sffamily\color{awesome}%
-   \addfontfeatures{LetterSpace=8}}
+  {\fontsize{11}{13}\selectfont\bfseries\sffamily\color{darktext}%
+   \addfontfeatures{LetterSpace=6}}
   {}
   {0pt}
   {\MakeUppercase}
-  [\vspace{-0.28em}{\color{divcolor}\rule{\textwidth}{0.6pt}}\vspace{0.10em}]
-\titlespacing*{\section}{0pt}{0.70em}{0.15em}
+  [\vspace{-0.25em}{\color{divcolor}\rule{\textwidth}{0.6pt}}\vspace{0.15em}]
+\titlespacing*{\section}{0pt}{0.80em}{0.20em}
 
 % ===== Header =====
 % Awesome-CV layout: name left (large), contact right (small, top-aligned)
 % accent rule as visual separator between header and body
 \newcommand{\Header}[4]{%
   \begin{tabularx}{\textwidth}{@{}X r@{}}
-    {\fontsize{23}{25}\selectfont\bfseries\sffamily\color{darktext} #1} &
-    \raisebox{6pt}{%
-      \fontsize{8}{10.5}\selectfont\sffamily\color{graytext} #3}
+    {\fontsize{24}{26}\selectfont\bfseries\sffamily\color{darktext} #1} &
+    \raisebox{5pt}{%
+      \fontsize{8}{10}\selectfont\sffamily\color{graytext} #3}
   \end{tabularx}\par
-  \vspace{0.06em}
-  {\fontsize{9.5}{12}\selectfont\sffamily\bfseries\color{awesome} #2}\par
-  \vspace{0.10em}
-  {\color{awesome}\rule{\textwidth}{2pt}}\par
-  \vspace{0.20em}
+  \vspace{0.15em}
+  {\fontsize{10}{12}\selectfont\sffamily\bfseries\color{darktext} #2}\par
+  \vspace{0.15em}
+  {\color{divcolor}\rule{\textwidth}{2pt}}\par
+  \vspace{0.25em}
   {\fontsize{9}{14}\selectfont\color{bodytext} #4}\par
-  \vspace{0.48em}
+  \vspace{0.35em}
 }
 
 % ===== Entry heading =====
 \newcommand{\EntryHeading}[3]{%
-  \vspace{2mm}%
+  \vspace{1.5mm}%
   \begin{tabularx}{\textwidth}{@{}X r@{}}
-    {\fontsize{9.5}{11}\selectfont\sffamily\bfseries\color{darktext} #1%
+    {\fontsize{10}{12}\selectfont\sffamily\bfseries\color{darktext} #1%
       \ifx&#2&\else
         {\color{divcolor}\ \vrule width 0.5pt height 7pt depth 1.5pt\ }%
         {\fontsize{9}{11}\selectfont\normalfont\color{bodytext} #2}%
       \fi} &
     {\fontsize{7.8}{9}\selectfont\sffamily\color{lighttext} #3}
   \end{tabularx}\par
-  \vspace{0.5mm}
+  \vspace{1.0mm}
 }
 
 % ===== MetaLine (role tag below entry) =====
@@ -142,7 +142,7 @@
 % ===== Skill row =====
 \newcommand{\SkillRow}[2]{%
   \begin{tabularx}{\textwidth}{@{}p{2.55cm}@{\hspace{0.55em}}X@{}}
-    {\fontsize{8}{9.5}\selectfont\sffamily\bfseries\color{awesome} #1} &
+    {\fontsize{8}{9.5}\selectfont\sffamily\bfseries\color{darktext} #1} &
     {\fontsize{9}{10.5}\selectfont\color{bodytext} #2}
   \end{tabularx}\par
   \vspace{0.06em}
