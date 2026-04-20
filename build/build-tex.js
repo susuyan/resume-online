@@ -21,8 +21,8 @@ function escapeTex(str) {
 
 function formatInlineTex(str) {
   return escapeTex(str)
-    .replace(/→/g, '$\\\\rightarrow$')
-    .replace(/\*\*(.+?)\*\*/g, '\\\\Metric{$1}');
+    .replace(/→/g, '$\\rightarrow$')
+    .replace(/\*\*(.+?)\*\*/g, '\\Metric{$1}');
 }
 
 function splitHeadline(str) {
